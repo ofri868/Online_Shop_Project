@@ -1,15 +1,15 @@
 from rest_framework import serializers
-from .models import Cart, Product, Profile, Category
+from .models import Order, Product, Profile, Category, Review
 
 
-class CartSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cart
+        model = Order
         fields = '__all__'
     def create(self, validated_data):
         user = self.context['user']
         print(user)
-        return Cart.objects.create(**validated_data,user=user)
+        return Order.objects.create(**validated_data,user=user)
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,6 +27,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):   
         user = self.context['user']
         return Profile.objects.create(**validated_data,user=user)
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+    def create(self, validated_data):   
+        user = self.context['user']
+        return Review.objects.create(**validated_data,user=user)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

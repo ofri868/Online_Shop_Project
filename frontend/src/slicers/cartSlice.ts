@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
+import { checkout } from '../APIs/cartAPI';
 import { getAllProds } from '../APIs/shopAPI';
 import { RootState } from '../app/store';
 import { CartItem } from '../models/CartItem';
@@ -13,10 +14,10 @@ const initialState: CartState = {
   sum: 0
 };
 
-export const getProdsAsync = createAsyncThunk(
-  'product/getAllProds',
-  async () => {
-    const response = await getAllProds();
+export const checkoutAsync = createAsyncThunk(
+  'product/checkout',
+  async (cart:CartItem[]) => {
+    const response = await checkout(cart);
     return response.data;
   }
 );
@@ -28,18 +29,19 @@ export const shopSlice = createSlice({
     addToCart: (state, action) => {
       let cartUpdated = false
       for (let i = 0; i < state.cart.length; i++) {
-        if (state.cart[i].product.desc === action.payload.desc) {
-          state.cart[i].amount++
+        if (state.cart[i].product.desc === action.payload.product['desc']) {
+          state.cart[i].amount = action.payload.amount
           cartUpdated = true
           break
         }
       }
       if (!cartUpdated) {
-        state.cart.push({ product: action.payload, amount: 1 })
+        state.cart.push({ product: action.payload.product, amount: action.payload.amount })
       }
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     increaseAmount: (state, action) => {
+      
       for (let i = 0; i < state.cart.length; i++) {
         if (state.cart[i].product.desc === action.payload.desc) {
           state.cart[i].amount++
@@ -77,7 +79,8 @@ export const shopSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getProdsAsync.fulfilled, (state, action) => {
+      .addCase(checkoutAsync.fulfilled, (state, action) => {
+        console.log(action.payload)
       })
   },
 });

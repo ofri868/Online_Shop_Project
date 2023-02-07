@@ -1,12 +1,11 @@
 import axios from "axios";
 import { MYSERVER } from "../env";
-import { Product } from "../models/Product";
 import { Profile } from "../models/Profile";
 // A mock function to mimic making an async request for data
 
-export function logOut() {
+export function logOut(myToken:string, refreshToken:string) {
   return new Promise<{ data: any }>((resolve) =>
-    axios.get(MYSERVER + 'logout').then((res) => resolve({ data: res.data }))
+    axios.post(MYSERVER + 'logout/',{refreshToken},{headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
   );
 }
 export function logIn(username:string, password:string) {
@@ -22,6 +21,11 @@ export function register(username:string, password:string, email:string) {
 }
 
 export function getProfile(myToken:string) {
+  return new Promise<{ data: Profile[] }>((resolve) =>
+    axios.get(MYSERVER + 'profile', {headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
+  );
+}
+export function getAuthData(myToken:string) {
   return new Promise<{ data: Profile[] }>((resolve) =>
     axios.get(MYSERVER + 'profile', {headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
   );

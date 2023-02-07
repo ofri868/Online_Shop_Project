@@ -1,18 +1,24 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
-import { getProfile, logIn, logOut, register, updProfile } from '../APIs/authAPI';
+import jwtDecode from 'jwt-decode';
+import { getAuthData, getProfile, logIn, logOut, register, updProfile } from '../APIs/authAPI';
 import { RootState } from '../app/store';
+import { AuthDetails } from '../models/AuthDetails';
 import { Profile } from '../models/Profile';
 
 export interface AuthenticationState {
   myToken: string;
+  refreshToken:string
   logged: boolean
   userProfile: Profile
+  userAuthDetails: AuthDetails
 }
 
 const initialState: AuthenticationState = {
   myToken: '',
   logged: false,
-  userProfile: {created: false, firstName:'', lastName:'', address:'', city: '', zipCode:'', billingAddress:'', billingCity:'', billingZipCode:'', image:''}
+  userProfile: { created: false, first_name: '', last_name: '', address: '', city: '', zip_code: '', billing_address: '', billing_city: '', billing_zip_code: '', image: '' },
+  refreshToken: '',
+  userAuthDetails: {}
 };
 
 export const logInAsync = createAsyncThunk(
@@ -25,8 +31,8 @@ export const logInAsync = createAsyncThunk(
 
 export const logOutAsync = createAsyncThunk(
   'auth/logOut',
-  async () => {
-    const response = await logOut();
+  async (data:{myToken:string, refreshToken:string}) => {
+    const response = await logOut(data.myToken, data.refreshToken);
     return response.data;
   }
 );
@@ -35,6 +41,13 @@ export const getProfileAsync = createAsyncThunk(
   'auth/getProfile',
   async (myToken: string) => {
     const response = await getProfile(myToken);
+    return response.data;
+  }
+);
+export const getAuthDataAsync = createAsyncThunk(
+  'auth/getAuthData',
+  async (myToken: string) => {
+    const response = await getAuthData(myToken);
     return response.data;
   }
 );
@@ -63,16 +76,27 @@ export const authSlice = createSlice({
         if (sessionStorage.getItem('token')) {
           state.myToken = JSON.parse(sessionStorage.getItem('token') || '')
           state.logged = true
+          state.refreshToken = JSON.parse(sessionStorage.getItem('refresh_token') || '')
         }
       }
+    },
+    changeProfile: (state, action)=>{   
+      state.userProfile = action.payload
     }
+
   },
   extraReducers: (builder) => {
     builder
       .addCase(logInAsync.fulfilled, (state, action) => {
         state.myToken = action.payload.access
+        state.refreshToken = action.payload.refresh
         sessionStorage.setItem("token", JSON.stringify(state.myToken))
+        sessionStorage.setItem("refresh_token", JSON.stringify(state.refreshToken))
         state.logged = true
+        let decoded:any = jwtDecode(action.payload.access)
+        state.userAuthDetails.email = decoded.email
+        state.userAuthDetails.isAdmin = decoded.isAdmin
+        state.userAuthDetails.user = decoded.user
       })
       .addCase(logOutAsync.fulfilled, (state) => {
         state.myToken = ''
@@ -80,7 +104,6 @@ export const authSlice = createSlice({
         state.logged = false
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
-        console.log(action.payload)
         state.myToken = ''
         state.logged = true
       }).addCase(getProfileAsync.fulfilled, (state, action) => {
@@ -93,8 +116,10 @@ export const authSlice = createSlice({
   },
 });
 
-export const { getToken } = authSlice.actions;
+export const { getToken, changeProfile } = authSlice.actions;
 export const selectToken = (state: RootState) => state.auth.myToken;
+export const selectRefreshToken = (state: RootState) => state.auth.refreshToken;
 export const selectLogged = (state: RootState) => state.auth.logged;
 export const selectProfile = (state: RootState) => state.auth.userProfile;
+export const selectAuthDetails = (state: RootState) => state.auth.userAuthDetails;
 export default authSlice.reducer;

@@ -1,12 +1,14 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { selectProfile } from '../slicers/authSlice'
+import { selectAuthDetails, selectProfile } from '../slicers/authSlice'
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
 import { Button, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { MYSERVER } from '../env';
+import { useAppSelector } from '../app/hooks';
 
 const ViewProfile = () => {
-    const profile = useSelector(selectProfile)
+    const profile = useAppSelector(selectProfile)
+    const authDetails = useAppSelector(selectAuthDetails)
 
     return (
         <div>
@@ -16,13 +18,13 @@ const ViewProfile = () => {
                         <MDBCol lg="6" className="mb-4 mb-lg-0">
                             <MDBCard className="mb-3" style={{ borderRadius: '.5rem' }}>
                                 <MDBRow className="g-0">
-                                    <MDBCol md="4" className="gradient-custom text-center text-white"
+                                    <MDBCol md="4" className="gradient-custom text-center text-black"
                                         style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
-                                        <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                                            alt="Avatar" className="my-5" style={{ width: '80px' }} fluid />
-                                        <MDBTypography tag="h5">{profile.firstName} {profile.lastName}</MDBTypography>
-                                        <MDBCardText>Web Designer</MDBCardText>
+                                        <MDBCardImage src={MYSERVER + profile.image}
+                                            alt={MYSERVER + "/images/profile.png"} className="my-5" style={{ width: '80px' }} fluid />
+                                        <MDBTypography tag="h5">{profile.first_name} {profile.last_name}</MDBTypography>
                                         <MDBIcon far icon="edit mb-5" />
+                                        <Link to="/profile/edit"><Button >Edit Profile</Button></Link>
                                     </MDBCol>
                                     <MDBCol md="8">
                                         <MDBCardBody className="p-4">
@@ -31,7 +33,7 @@ const ViewProfile = () => {
                                             <MDBRow className="pt-1">
                                                 <MDBCol size="6" className="mb-3">
                                                     <MDBTypography tag="h6">Email</MDBTypography>
-                                                    <MDBCardText className="text-muted">info@example.com</MDBCardText>
+                                                    <MDBCardText className="text-muted">{authDetails.email}</MDBCardText>
                                                 </MDBCol>
                                                 <MDBCol size="6" className="mb-3">
                                                     <MDBTypography tag="h6">Phone</MDBTypography>

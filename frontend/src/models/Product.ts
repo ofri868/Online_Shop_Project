@@ -1,8 +1,10 @@
 import { Category } from './Category'
-export class Product {
+import { Review } from './Review';
+export interface Product {
     id?: number;
-    desc: string = '';
-    price: number = 0;
-    category: Category = { desc: '' }
+    desc: string
+    price: number
+    category: Category 
     image?: string
+    reviews?: Review[]
 }

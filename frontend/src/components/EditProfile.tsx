@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { selectProfile, selectToken } from '../slicers/authSlice'
+import { changeProfile, selectProfile, selectToken } from '../slicers/authSlice'
 import { Button, Card, Col, Form, Row, Image } from 'react-bootstrap';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { useSelector } from 'react-redux';
@@ -7,52 +7,63 @@ import { MYSERVER } from '../env';
 import axios from 'axios';
 
 const EditProfile = () => {
-    const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch()
     const profile = useAppSelector(selectProfile)
     const myToken = useSelector(selectToken)
     const [billing, setBilling] = useState(false)
     const [image, setImage] = useState<File | any>(null);
-    const [firstName, setfirstName] = useState(profile.firstName)
-    const [lastName, setlastName] = useState(profile.lastName)
-    const [address, setaddress] = useState(profile.address)
-    const [city, setcity] = useState(profile.city)
-    const [zipCode, setzipCode] = useState(profile.zipCode)
-    const [billingAddress, setbillingAddress] = useState(profile.billingAddress)
-    const [billingCity, setbillingCity] = useState(profile.billingCity)
-    const [billingZipCode, setbillingZipCode] = useState(profile.billingZipCode)
+    const [firstName, setfirstName] = useState('')
+    const [lastName, setlastName] = useState('')
+    const [address, setaddress] = useState('')
+    const [city, setcity] = useState('')
+    const [zipCode, setzipCode] = useState('')
+    const [billingAddress, setbillingAddress] = useState('')
+    const [billingCity, setbillingCity] = useState('')
+    const [billingZipCode, setbillingZipCode] = useState('')
 
     useEffect(() => {
-        console.log(profile)
+        if(profile.created){
+            setfirstName(profile.first_name)
+            setlastName(profile.last_name)
+            setaddress(profile.address)
+            setcity(profile.city)
+            setzipCode(profile.zip_code)
+            setbillingAddress(profile.billing_address)
+            setbillingCity(profile.billing_city)
+            setbillingZipCode(profile.billing_zip_code)
+        }
     }, [profile])
-
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setImage(event.target.files?.item(0) ?? null);
     }
     const handleProfileUpdate = (event: { preventDefault: () => void; }) => {
-        if(billing){
-            setbillingAddress(address)
-            setbillingCity(city)
-            setbillingZipCode(zipCode)
-        }
-
         event.preventDefault();
 
         const formData = new FormData();
-        if(image){
+        if (image) {
             formData.append("image", image);
         }
-        formData.append("firstName", firstName);
-        formData.append("lastName", lastName);
+        formData.append("created", '1')
+        formData.append("first_name", firstName);
+        formData.append("last_name", lastName);
         formData.append("address", address);
         formData.append("city", city);
-        formData.append("zipCode", zipCode);
-        formData.append("billingAddress", billingAddress);
-        formData.append("billingCity", billingCity);
-        formData.append("billingZipCode", billingZipCode);
+        formData.append("zip_code", zipCode);
+        if (billing) {
+            formData.append("billing_address", address);
+            formData.append("billing_city", city);
+            formData.append("billing_zip_code", zipCode);
+        }
+        else {
+            formData.append("billing_address", billingAddress);
+            formData.append("billing_city", billingCity);
+            formData.append("billing_zip_code", billingZipCode);
+        }
 
-        axios.put(MYSERVER+'profile', formData, {headers: {Authorization: `Bearer ${myToken}`,"content-type": "multipart/form-data",},})
-        .then((res) => {console.log(res.data);})
+
+        axios.put(MYSERVER + 'profile', formData, { headers: { Authorization: `Bearer ${myToken}`, "content-type": "multipart/form-data", }, })
+            .then((res) => dispatch(changeProfile(res.data)))
     }
 
     return (
@@ -68,14 +79,14 @@ const EditProfile = () => {
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
-                            <Form.Group as={Col} controlId="formGridFirstname">
+                            <Form.Group as={Col} controlId="formGridFirst name">
                                 <Form.Label className="d-flex flex-row bd-highlight">First name</Form.Label>
-                                <Form.Control onChange={(e) => setfirstName(e.target.value)} type="text" placeholder="First name" defaultValue={profile.firstName} />
+                                <Form.Control onChange={(e) => setfirstName(e.target.value)} type="text" placeholder="First name" defaultValue={profile.first_name} />
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="formGridLastname">
+                            <Form.Group as={Col} controlId="formGridLast name">
                                 <Form.Label className="d-flex flex-row bd-highlight">Last name</Form.Label>
-                                <Form.Control onChange={(e) => setlastName(e.target.value)} type="text" placeholder="Last name" defaultValue={profile.lastName} />
+                                <Form.Control onChange={(e) => setlastName(e.target.value)} type="text" placeholder="Last name" defaultValue={profile.last_name} />
                             </Form.Group>
                         </Row>
 
@@ -85,17 +96,14 @@ const EditProfile = () => {
                                 <Form.Control onChange={(e) => setaddress(e.target.value)} placeholder="1234 Main St" defaultValue={profile.address} />
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="formGridState">
+                            <Form.Group as={Col} controlId="formGridCity">
                                 <Form.Label className="d-flex flex-row bd-highlight">City</Form.Label>
-                                <Form.Select onChange={(e) => setcity(e.target.value)} defaultValue={profile.city}>
-                                    <option>Choose...</option>
-                                    <option>...</option>
-                                </Form.Select>
+                                <Form.Control type='text' onChange={(e) => setcity(e.target.value)} placeholder="City" defaultValue={profile.city}/>
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridZip">
                                 <Form.Label className="d-flex flex-row bd-highlight">Zip</Form.Label>
-                                <Form.Control onChange={(e) => setzipCode(e.target.value)} defaultValue={profile.zipCode} />
+                                <Form.Control onChange={(e) => setzipCode(e.target.value)} defaultValue={profile.zip_code} />
                             </Form.Group>
                         </Row>
 
@@ -103,26 +111,23 @@ const EditProfile = () => {
                             <Form.Check onChange={() => setBilling(!billing)} className="d-flex flex-row bd-highlight" type="checkbox" label="Billing address same as shipping address" />
                         </Form.Group>
                         {!billing && <Row className="mb-3" >
-                            <Form.Group className="mb-3" controlId="formGridBillingAddress">
+                            <Form.Group className="mb-3" controlId="formGridBilling Address">
                                 <Form.Label className="d-flex flex-row bd-highlight">Billing Address</Form.Label>
-                                <Form.Control onChange={(e) => setbillingAddress(e.target.value)} placeholder="1234 Main St" defaultValue={profile.billingAddress} />
+                                <Form.Control onChange={(e) => setbillingAddress(e.target.value)} placeholder="1234 Main St" defaultValue={profile.billing_address} />
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="formGridState">
+                            <Form.Group as={Col} controlId="formGridBilling City">
                                 <Form.Label className="d-flex flex-row bd-highlight">Billing City</Form.Label>
-                                <Form.Select onChange={(e) => setbillingCity(e.target.value)} defaultValue={profile.billingCity} >
-                                    <option>Choose...</option>
-                                    <option>...</option>
-                                </Form.Select>
+                                <Form.Control onChange={(e) => setbillingCity(e.target.value)} defaultValue={profile.billing_city} />
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="formGridZip">
+                            <Form.Group as={Col} controlId="formGridBilling Zip">
                                 <Form.Label className="d-flex flex-row bd-highlight">Billing Zip</Form.Label>
-                                <Form.Control onChange={(e) => setbillingZipCode(e.target.value)} defaultValue={profile.billingZipCode} />
+                                <Form.Control onChange={(e) => setbillingZipCode(e.target.value)} defaultValue={profile.billing_zip_code} />
                             </Form.Group>
                         </Row>}
 
-                        
+
                         <Button variant="primary" type="submit">
                             Save changes
                         </Button>

@@ -1,13 +1,13 @@
-export class Profile{
+export interface Profile{
     user? : number
-    created : boolean = false
-    image : string =''
-    firstName : string =''
-    lastName : string ='' 
-    address : string ='' 
-    city : string ='' 
-    zipCode : string ='' 
-    billingAddress : string ='' 
-    billingCity : string =''
-    billingZipCode : string ='' 
+    created : boolean
+    image : string
+    first_name : string
+    last_name : string 
+    address : string  
+    city : string  
+    zip_code : string  
+    billing_address : string  
+    billing_city : string 
+    billing_zip_code : string  
 }

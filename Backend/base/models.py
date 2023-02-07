@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 # Create your models here.
+
 class Category(models.Model):
     user =models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     desc = models.CharField(max_length=15,null=True,blank=True)
@@ -22,11 +23,17 @@ class Product(models.Model):
     def __str__(self):
            return self.desc
 
-class Cart(models.Model):
+class Order(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
-    product =models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
+    product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
     amount =  models.IntegerField()
-    
+
+class Review(models.Model):
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+    product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
+    title = models.CharField(max_length=40,blank=True)
+    desc = models.TextField(max_length=500,blank=True)
+    rating = models.IntegerField(null=True) 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)

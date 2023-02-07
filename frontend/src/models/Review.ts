@@ -1,7 +1,8 @@
-export class Review {
-    userID?: number
-    itemID?: number
-    title: string = ''
+export interface Review {
+    user: number
+    username: string
+    item: number
+    title: string 
     desc?: string
-    rating: number = 0
+    rating: number 
 }

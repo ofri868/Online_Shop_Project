@@ -7,11 +7,13 @@ import { Product } from '../models/Product';
 export interface ShopState {
   categories: Category[]
   products : Product[]
+  selectedProduct: Product
 }
 
 const initialState: ShopState = {
   products: [],
-  categories: []
+  categories: [],
+  selectedProduct: {id:-1,image:'', reviews:[],category:{desc:''},desc:'',price:0}
 };
 
 export const getProdsAsync = createAsyncThunk(
@@ -58,7 +60,9 @@ export const shopSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {
-    
+    changeSelectedProduct: (state, action) => {
+      state.selectedProduct = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -81,7 +85,8 @@ export const shopSlice = createSlice({
   },
 });
 
-export const { } = shopSlice.actions;
+export const { changeSelectedProduct } = shopSlice.actions;
 export const selectProducts = (state: RootState) => state.shop.products;
+export const selectSingleProduct = (state: RootState) => state.shop.selectedProduct;
 export const selectCategories = (state: RootState) => state.shop.categories;
 export default shopSlice.reducer;

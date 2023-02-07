@@ -8,9 +8,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginScreen from './screens/LoginScreen';
 import { Shop } from './components/Shop';
 import RegisterScreen from './screens/RegisterScreen';
-import ProfileScreen from './screens/ProfileScreen';
 import ViewProfile from './components/ViewProfile';
 import EditProfile from './components/EditProfile';
+import SingleProduct from './components/SingleProduct';
+import Cart from './components/Cart';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -24,6 +25,8 @@ root.render(
             <Route path="/login" element={<LoginScreen/>}/>
             <Route path="/register" element={<RegisterScreen/>}/>
             <Route path="/shop" element={<Shop/>}/>
+            <Route path="/checkout" element={<Cart/>}/>
+            <Route path="/shop/product" element={<SingleProduct/>}/>
             <Route path="/profile/view" element={<ViewProfile/>}/>
             <Route path="/profile/edit" element={<EditProfile/>}/>
           </Route>

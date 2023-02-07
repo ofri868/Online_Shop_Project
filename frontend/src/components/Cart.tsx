@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { MYSERVER } from '../env';
-import { calcTotal, selectCart, selectSum, clearCart, increaseAmount, decreaseAmount, loadCart } from '../slicers/cartSlice';
+import { selectLogged } from '../slicers/authSlice';
+import { calcTotal, selectCart, selectSum, clearCart, increaseAmount, decreaseAmount, loadCart, checkoutAsync } from '../slicers/cartSlice';
 
 const Cart = () => {
+    const logged = useAppSelector(selectLogged)
     const cart = useAppSelector(selectCart);
     const sum = useAppSelector(selectSum)
     const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(calcTotal())
     }, [cart, dispatch])
-    useEffect(() => {
-        dispatch(loadCart())
-    }, [dispatch])
+    
 
     return (
         <div>
@@ -29,6 +29,7 @@ const Cart = () => {
             )}
             Total: {sum}
             <button onClick={() => dispatch(clearCart())}>Clear Cart</button>
+            <button onClick={() => dispatch(checkoutAsync(cart))}>Checkout</button>
         </div>
     )
 }

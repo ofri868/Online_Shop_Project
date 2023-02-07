@@ -1,7 +1,7 @@
 import axios from "axios";
 import { MYSERVER } from "../env";
 import { Product } from "../models/Product";
-// A mock function to mimic making an async request for data
+
 export function getAllProds() {
   return new Promise<{ data: any }>((resolve) =>
     axios.get(MYSERVER + 'products').then((res) => resolve({ data: res.data }))
