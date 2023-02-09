@@ -3,17 +3,20 @@ import { getAllProds, addProd, updateProd, deleteProd, getAllCategoriess } from 
 import { RootState } from '../app/store';
 import { Category } from '../models/Category';
 import { Product } from '../models/Product';
+import { Review } from '../models/Review';
 
 export interface ShopState {
   categories: Category[]
   products : Product[]
   selectedProduct: Product
+  reviews : Review[]
 }
 
 const initialState: ShopState = {
   products: [],
   categories: [],
-  selectedProduct: {id:-1,image:'', reviews:[],category:{desc:''},desc:'',price:0}
+  selectedProduct: { id: -1, image: '', category: { desc: '' }, desc: '', price: 0 },
+  reviews: []
 };
 
 export const getProdsAsync = createAsyncThunk(
@@ -62,6 +65,10 @@ export const shopSlice = createSlice({
   reducers: {
     changeSelectedProduct: (state, action) => {
       state.selectedProduct = action.payload
+      localStorage.setItem('selectedProduct', JSON.stringify(action.payload))
+    },
+    loadSelectedProduct: (state) => {
+      state.selectedProduct = JSON.parse(localStorage.getItem('selectedProduct') || '{}')
     }
   },
   extraReducers: (builder) => {
@@ -85,7 +92,7 @@ export const shopSlice = createSlice({
   },
 });
 
-export const { changeSelectedProduct } = shopSlice.actions;
+export const {loadSelectedProduct, changeSelectedProduct } = shopSlice.actions;
 export const selectProducts = (state: RootState) => state.shop.products;
 export const selectSingleProduct = (state: RootState) => state.shop.selectedProduct;
 export const selectCategories = (state: RootState) => state.shop.categories;

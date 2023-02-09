@@ -1,14 +1,26 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { MYSERVER } from '../env'
 import { Product } from '../models/Product';
 import { increaseAmount, decreaseAmount, addToCart, selectCart } from '../slicers/cartSlice'
-import { selectSingleProduct } from '../slicers/shopSlice';
+import { loadSelectedProduct, selectSingleProduct } from '../slicers/shopSlice';
 
 const SingleProduct = () => {
     const dispatch = useAppDispatch();
     const selectedProduct = useAppSelector(selectSingleProduct)
     const cart = useAppSelector(selectCart)
+
+    useEffect(() => {  
+      dispatch(loadSelectedProduct())
+    }, [dispatch])
+    
+    const amountInCart = (item: Product) => {
+      for (let i = 0; i < cart.length; i++) {
+        if (cart[i].product.desc === item.desc) {
+          return cart[i].amount
+        }
+      }
+    }
 
     const inCart = (item: Product) => {
         for (let i = 0; i < cart.length; i++) {
@@ -34,7 +46,7 @@ const SingleProduct = () => {
                             {inCart(selectedProduct) ?
                                 <div>In your cart:
                                     <button className='btn btn-success' onClick={() => dispatch(increaseAmount(selectedProduct))}>+</button>
-                                    <input style={{ width: '40px' }} type='number' onChange={(e) => handleCart(selectedProduct, Number(e.target.value))} defaultValue='1' />
+                                    <input style={{ width: '40px' }} type='number' onChange={(e) => handleCart(selectedProduct, Number(e.target.value))} min={0} value={amountInCart(selectedProduct)} />
 
                                     <button className='btn btn-danger' onClick={() => dispatch(decreaseAmount(selectedProduct))}>-</button>
                                 </div>

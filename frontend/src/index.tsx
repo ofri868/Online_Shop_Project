@@ -11,7 +11,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import ViewProfile from './components/ViewProfile';
 import EditProfile from './components/EditProfile';
 import SingleProduct from './components/SingleProduct';
-import Cart from './components/Cart';
+import CheckoutScreen from './screens/CheckoutScreen';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -25,7 +25,7 @@ root.render(
             <Route path="/login" element={<LoginScreen/>}/>
             <Route path="/register" element={<RegisterScreen/>}/>
             <Route path="/shop" element={<Shop/>}/>
-            <Route path="/checkout" element={<Cart/>}/>
+            <Route path="/checkout" element={<CheckoutScreen/>}/>
             <Route path="/shop/product" element={<SingleProduct/>}/>
             <Route path="/profile/view" element={<ViewProfile/>}/>
             <Route path="/profile/edit" element={<EditProfile/>}/>

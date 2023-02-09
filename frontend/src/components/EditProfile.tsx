@@ -5,9 +5,11 @@ import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { useSelector } from 'react-redux';
 import { MYSERVER } from '../env';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const EditProfile = () => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const profile = useAppSelector(selectProfile)
     const myToken = useSelector(selectToken)
     const [billing, setBilling] = useState(false)
@@ -63,7 +65,7 @@ const EditProfile = () => {
 
 
         axios.put(MYSERVER + 'profile', formData, { headers: { Authorization: `Bearer ${myToken}`, "content-type": "multipart/form-data", }, })
-            .then((res) => dispatch(changeProfile(res.data)))
+            .then((res) => dispatch(changeProfile(res.data))).then(()=>navigate('/profile/view'))
     }
 
     return (

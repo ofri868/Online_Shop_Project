@@ -17,13 +17,13 @@ export function Shop() {
     dispatch(getCategoriesAsync())
   }, [dispatch])
 
-  // const amountInCart = (item: Product) => {
-  //   for (let i = 0; i < cart.length; i++) {
-  //     if (cart[i].product.desc === item.desc) {
-  //       return cart[i].amount
-  //     }
-  //   }
-  // }
+  const amountInCart = (item: Product) => {
+    for (let i = 0; i < cart.length; i++) {
+      if (cart[i].product.desc === item.desc) {
+        return cart[i].amount
+      }
+    }
+  }
 
   const inCart = (item: Product) => {
     for (let i = 0; i < cart.length; i++) {
@@ -58,7 +58,7 @@ export function Shop() {
                   {inCart(product) ?
                     <div>In cart:
                       <button className='btn btn-success' onClick={() => dispatch(increaseAmount(product))}>+</button>
-                      <input style={{width:'40px'}} type='number' onChange={(e)=>handleCart(product,Number(e.target.value))} defaultValue='1'/>
+                      <input style={{width:'40px'}} type='number' onChange={(e)=>handleCart(product,Number(e.target.value))} min={0} value={amountInCart(product)}/>
                       
                       <button className='btn btn-danger' onClick={() => dispatch(decreaseAmount(product))}>-</button>
                     </div>

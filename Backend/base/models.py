@@ -24,7 +24,11 @@ class Product(models.Model):
            return self.desc
 
 class Order(models.Model):
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    createdTime=models.DateTimeField(auto_now_add=True)
+
+class OrderDetail(models.Model):
+    order = models.ForeignKey(Order,on_delete=models.SET_NULL,null=True)
     product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
     amount =  models.IntegerField()
 

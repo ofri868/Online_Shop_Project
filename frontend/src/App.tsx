@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import './App.css';
 import { useAppDispatch, useAppSelector } from './app/hooks';
+import Cart from './components/Cart';
 import MyNavbar from './components/navbar';
 import { getProfileAsync, getToken, selectAuthDetails, selectToken } from './slicers/authSlice';
 import { clearCart, loadCart } from './slicers/cartSlice';
@@ -35,6 +36,7 @@ const App = () => {
   return (
     <div className="App">
       <MyNavbar />
+      <Cart/>
       <Outlet />
     </div>
   );
