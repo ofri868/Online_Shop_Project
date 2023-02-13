@@ -80,6 +80,12 @@ export const authSlice = createSlice({
         }
       }
     },
+    loadProfile: (state)=>{   
+      state.userProfile = JSON.parse(sessionStorage.getItem('profile') || '{}')
+    },
+    loadAuthDetails: (state)=>{   
+      state.userAuthDetails = JSON.parse(sessionStorage.getItem('auth_details') || '{}')
+    },
     changeProfile: (state, action)=>{   
       state.userProfile = action.payload
     }
@@ -96,11 +102,14 @@ export const authSlice = createSlice({
         let decoded:any = jwtDecode(action.payload.access)
         state.userAuthDetails.email = decoded.email
         state.userAuthDetails.isAdmin = decoded.isAdmin
-        state.userAuthDetails.user = decoded.user
+        state.userAuthDetails.username = decoded.username
+        sessionStorage.setItem("auth_details", JSON.stringify(state.userAuthDetails))
       })
       .addCase(logOutAsync.fulfilled, (state) => {
         state.myToken = ''
         sessionStorage.setItem("token", '')
+        sessionStorage.setItem("profile", '{}')
+        sessionStorage.setItem("auth_details", '{}')
         state.logged = false
       })
       .addCase(registerAsync.fulfilled, (state, action) => {
@@ -108,15 +117,17 @@ export const authSlice = createSlice({
         state.logged = true
       }).addCase(getProfileAsync.fulfilled, (state, action) => {
         state.userProfile = action.payload[0]
+        sessionStorage.setItem("profile", JSON.stringify(action.payload[0]))
       })
       .addCase(updProfileAsync.fulfilled, (state, action) => {
         state.userProfile = action.payload
+        
       })
 
   },
 });
 
-export const { getToken, changeProfile } = authSlice.actions;
+export const { getToken, changeProfile, loadProfile, loadAuthDetails } = authSlice.actions;
 export const selectToken = (state: RootState) => state.auth.myToken;
 export const selectRefreshToken = (state: RootState) => state.auth.refreshToken;
 export const selectLogged = (state: RootState) => state.auth.logged;

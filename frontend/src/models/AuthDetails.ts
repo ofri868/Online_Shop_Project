@@ -1,5 +1,5 @@
 export interface AuthDetails{
-    user?: number
+    username?: string
     email?: string
     isAdmin?: boolean
 }

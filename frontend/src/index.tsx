@@ -12,6 +12,7 @@ import ViewProfile from './components/ViewProfile';
 import EditProfile from './components/EditProfile';
 import SingleProduct from './components/SingleProduct';
 import CheckoutScreen from './screens/CheckoutScreen';
+import ReviewScreen from './screens/ReviewScreen';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -29,6 +30,7 @@ root.render(
             <Route path="/shop/product" element={<SingleProduct/>}/>
             <Route path="/profile/view" element={<ViewProfile/>}/>
             <Route path="/profile/edit" element={<EditProfile/>}/>
+            <Route path="/review" element={<ReviewScreen/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

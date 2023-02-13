@@ -30,9 +30,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-    def create(self, validated_data):   
-        user = self.context['user']
-        return Review.objects.create(**validated_data,user=user)
+    def create(self, validated_data):
+        return Review.objects.create(**validated_data)
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

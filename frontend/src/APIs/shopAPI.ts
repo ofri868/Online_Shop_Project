@@ -1,14 +1,15 @@
 import axios from "axios";
 import { MYSERVER } from "../env";
 import { Product } from "../models/Product";
+import { Review } from "../models/Review";
 
-export function getAllProds() {
+export function getProds() {
   return new Promise<{ data: any }>((resolve) =>
     axios.get(MYSERVER + 'products').then((res) => resolve({ data: res.data }))
   );
 }
 
-export function getAllCategoriess() {
+export function getCategories() {
   return new Promise<{ data: any }>((resolve) =>
     axios.get(MYSERVER + 'category').then((res) => resolve({ data: res.data }))
   );
@@ -29,5 +30,17 @@ export function updateProd(newprod:Product) {
 export function deleteProd(id:number) {
   return new Promise<{ data: any }>((resolve) =>
     axios.delete(MYSERVER + 'products/'+id).then((res) => resolve({ data: res.data }))
+  );
+}
+
+export function getReviews(product:number) {
+  return new Promise<{ data: any }>((resolve) =>
+    axios.get(MYSERVER + 'review/' + product).then((res) => resolve({ data: res.data }))
+  );
+}
+
+export function addReview(newReview:Review, myToken:string) {
+  return new Promise<{ data: any }>((resolve) =>
+    axios.post(MYSERVER + 'review', newReview, {headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
   );
 }

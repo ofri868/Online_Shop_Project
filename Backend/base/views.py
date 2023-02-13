@@ -9,7 +9,6 @@ from .models import Order, Product, Profile, Category, Review
 from .serializers import CategorySerializer, OrderDetailSerializer, ProductSerializer, ProfileSerializer, ReviewSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-# Create your views here.
 
 #  /////////////// login start
 
@@ -17,7 +16,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['user'] = user.id
+        token['username'] = user.username
         token['email'] = user.email
         token['isAdmin']= user.is_superuser
         return token
@@ -65,18 +64,18 @@ def index(request):
 @permission_classes([IsAuthenticated])
 class OrderView(APIView):
     """
-    This class handle the CRUD operations for MyModel
+    This class handle the CRUD operations for Order
     """
 
     def get(self, request):
-        """Handle GET requests to return a list of MyModel objects"""
+        """Handle GET requests to return a list of Orders"""
         temp = Order.objects.all()
         my_model = temp.filter(user=request.user.id)
         serializer = OrderDetailSerializer(my_model, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        """Handle POST requests to create a new Task object"""
+        """Handle POST requests to create a new Order"""
 
         if(request.user.id):
             cart_validation = False
@@ -103,16 +102,16 @@ class OrderView(APIView):
 #########################################################################
 
 class ProductView(APIView):
-    """This class handle the CRUD operations for MyModel"""
+    """This class handle the CRUD operations for Product"""
 
     def get(self, request):
-        """Handle GET requests to return a list of MyModel objects"""
+        """Handle GET requests to return a list of Product objects"""
         my_model = Product.objects.all()
         serializer = ProductSerializer(my_model, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        """Handle POST requests to create a new Task object"""
+        """Handle POST requests to create a new Product"""
 
         serializer = ProductSerializer(data=request.data, context={'user': request.user})
         if serializer.is_valid():
@@ -121,7 +120,7 @@ class ProductView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
-        """Handle PUT requests to update an existing Task object"""
+        """Handle PUT requests to update an existing Product"""
         my_model = Product.objects.get(pk=pk)
         serializer = ProductSerializer(my_model, data=request.data)
         if serializer.is_valid():
@@ -130,7 +129,7 @@ class ProductView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        """Handle DELETE requests to delete a Task object"""
+        """Handle DELETE requests to delete a Product"""
         my_model = Product.objects.get(pk=pk)
         my_model.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -141,17 +140,17 @@ class ProductView(APIView):
 
 @permission_classes([IsAuthenticated])
 class ProfileView(APIView):
-    """This class handle the CRUD operations for MyModel"""
+    """This class handle the CRUD operations for Profile"""
 
     def get(self, request):
-        """Handle GET requests to return a list of MyModel objects"""
+        """Handle GET requests to return a list of Profiles"""
         temp = Profile.objects.all()
         my_model = temp.filter(user=request.user.id)
         serializer = ProfileSerializer(my_model, many=True)
         return Response(serializer.data)
 
     def put(self, request):
-        """Handle PUT requests to update an existing Task object"""
+        """Handle PUT requests to update an existing Profile"""
         print(request.user.id)
         my_model = Profile.objects.get(user=request.user.id)
         serializer = ProfileSerializer(my_model, data=request.data)
@@ -165,10 +164,10 @@ class ProfileView(APIView):
 #########################################################################
 
 class CategoryView(APIView):
-    """This class handle the CRUD operations for MyModel"""
+    """This class handle the CRUD operations for Category"""
 
     def get(self, request):
-        """Handle GET requests to return a list of MyModel objects"""
+        """Handle GET requests to return a list of Categories"""
         my_model = Category.objects.all()
         serializer = CategorySerializer(my_model, many=True)
         return Response(serializer.data)
@@ -178,20 +177,20 @@ class CategoryView(APIView):
 #########################################################################
 
 class ReviewView(APIView):
-    """This class handle the CRUD operations for MyModel"""
+    """This class handle the CRUD operations for Review"""
 
-    def get(self, request):
-        """Handle GET requests to return a list of MyModel objects"""
-        temp = Review.objects.all()
-        my_model = temp.filter(user=request.user.id)
+    def get(self, request, id):
+        """Handle GET requests to return a list of Reviews"""
+        my_model = Review.objects.all().filter(product = id)
         serializer = ReviewSerializer(my_model, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        """Handle POST requests to update an existing Task object"""
-        my_model = Review.objects.get(id=request.user.id)
-        serializer = ReviewSerializer(my_model, data=request.data)
+        permission_classes([IsAuthenticated])
+        """Handle POST requests to update an existing Review"""
+        print(request.data)
+        serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response('Review added successfully')
         return Response(serializer.errors)

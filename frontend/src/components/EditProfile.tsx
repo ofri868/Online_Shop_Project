@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { changeProfile, selectProfile, selectToken } from '../slicers/authSlice'
 import { Button, Card, Col, Form, Row, Image } from 'react-bootstrap';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
-import { useSelector } from 'react-redux';
 import { MYSERVER } from '../env';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +10,7 @@ const EditProfile = () => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const profile = useAppSelector(selectProfile)
-    const myToken = useSelector(selectToken)
+    const myToken = useAppSelector(selectToken)
     const [billing, setBilling] = useState(false)
     const [image, setImage] = useState<File | any>(null);
     const [firstName, setfirstName] = useState('')
@@ -24,7 +23,7 @@ const EditProfile = () => {
     const [billingZipCode, setbillingZipCode] = useState('')
 
     useEffect(() => {
-        if(profile.created){
+        if (profile.created) {
             setfirstName(profile.first_name)
             setlastName(profile.last_name)
             setaddress(profile.address)
@@ -65,7 +64,7 @@ const EditProfile = () => {
 
 
         axios.put(MYSERVER + 'profile', formData, { headers: { Authorization: `Bearer ${myToken}`, "content-type": "multipart/form-data", }, })
-            .then((res) => dispatch(changeProfile(res.data))).then(()=>navigate('/profile/view'))
+            .then((res) => dispatch(changeProfile(res.data))).then(() => navigate('/profile/view'))
     }
 
     return (
@@ -100,7 +99,7 @@ const EditProfile = () => {
 
                             <Form.Group as={Col} controlId="formGridCity">
                                 <Form.Label className="d-flex flex-row bd-highlight">City</Form.Label>
-                                <Form.Control type='text' onChange={(e) => setcity(e.target.value)} placeholder="City" defaultValue={profile.city}/>
+                                <Form.Control type='text' onChange={(e) => setcity(e.target.value)} placeholder="City" defaultValue={profile.city} />
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridZip">

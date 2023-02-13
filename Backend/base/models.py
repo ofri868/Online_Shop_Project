@@ -14,7 +14,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     user =models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
-    desc = models.CharField(max_length=40,blank=True)
+    desc = models.CharField(max_length=150,blank=True)
     price = models.DecimalField(max_digits=5,decimal_places=2)
     createdTime=models.DateTimeField(auto_now_add=True)
     category=models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
@@ -30,14 +30,15 @@ class Order(models.Model):
 class OrderDetail(models.Model):
     order = models.ForeignKey(Order,on_delete=models.SET_NULL,null=True)
     product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
-    amount =  models.IntegerField()
+    amount =  models.IntegerField(null=True)
 
 class Review(models.Model):
     user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+    username = models.CharField(max_length=150,blank=True)
     product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
     title = models.CharField(max_length=40,blank=True)
     desc = models.TextField(max_length=500,blank=True)
-    rating = models.IntegerField(null=True) 
+    rating = models.FloatField(null=True) 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)

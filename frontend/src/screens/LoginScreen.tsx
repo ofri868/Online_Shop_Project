@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { logInAsync, selectLogged } from '../slicers/authSlice';
+import { getProfileAsync, logInAsync, selectLogged, selectToken } from '../slicers/authSlice';
 import {Link, useNavigate} from 'react-router-dom'
 const LoginScreen = () => {
     // const username = useAppSelector(selectUname);
@@ -10,10 +10,12 @@ const LoginScreen = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const logged = useAppSelector(selectLogged)
+    const myToken = useAppSelector(selectToken)
     const dispatch = useAppDispatch();
     useEffect(() => {
         if(logged){
             navigate('/shop')
+            dispatch(getProfileAsync(myToken))
         }
     }, [logged, navigate])
     
