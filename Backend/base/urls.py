@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import MyTokenObtainPairView, ReviewView, index, register, OrderView, CategoryView, LogoutView, ProductView, ProfileView
+from .views import MyTokenObtainPairView, ReviewView, index, register, OrderView, LogoutView, ProductView, ProfileView, BrandView, ScaleView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -9,7 +9,8 @@ urlpatterns = [
     path('register/', register),
     path('', index),
     path('order', OrderView.as_view()),
-    path('category', CategoryView.as_view()),
+    path('brand', BrandView.as_view()),
+    path('scale', BrandView.as_view()),
     path('products', ProductView.as_view()),
     path('profile', ProfileView.as_view()),
     path('review', ReviewView.as_view()),

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import  OrderDetail, Product, Profile, Category, Review
+from .models import  Brand, OrderDetail, Product, Profile, Review, Scale
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
@@ -12,7 +12,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id','desc','price', 'category','image']
+        fields = ['id','title','desc','price', 'brand', 'scale','image']
     def create(self, validated_data):
         user = self.context['user']
         print(user)
@@ -33,11 +33,20 @@ class ReviewSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Review.objects.create(**validated_data)
 
-class CategorySerializer(serializers.ModelSerializer):
+class BrandSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Brand
         fields = ['id','desc']
     def create(self, validated_data):
         user = self.context['user']
         print(user)
-        return Category.objects.create(**validated_data,user=user)
+        return Brand.objects.create(**validated_data,user=user)
+
+class ScaleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scale
+        fields = ['id','desc']
+    def create(self, validated_data):
+        user = self.context['user']
+        print(user)
+        return Scale.objects.create(**validated_data,user=user)

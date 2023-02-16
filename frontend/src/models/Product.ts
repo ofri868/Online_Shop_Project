@@ -1,9 +1,11 @@
-import { Category } from './Category'
-import { Review } from './Review';
+import { Brand } from './Brand'
+import { Scale } from './Scale';
 export interface Product {
     id?: number;
+    title: string
     desc: string
     price: number
-    category: Category 
+    brand: Brand
+    scale: Scale
     image?: string
 }

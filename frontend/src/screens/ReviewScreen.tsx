@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { Review } from '../models/Review'
 import { selectAuthDetails, selectProfile, selectToken } from '../slicers/authSlice'
-import { addReviewAsync, loadSelectedProduct, selectMessage, selectSingleProduct } from '../slicers/shopSlice'
+import { addReviewAsync, loadSelectedProduct, selectSingleProduct } from '../slicers/shopSlice'
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { MYSERVER } from '../env'
@@ -16,8 +16,6 @@ const ReviewScreen = () => {
     const authDetails = useAppSelector(selectAuthDetails)
     const profile = useAppSelector(selectProfile)
     const myToken = useAppSelector(selectToken)
-    const message = useAppSelector(selectMessage)
-
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const [rating, setRating] = useState(-1)
@@ -55,7 +53,7 @@ const ReviewScreen = () => {
                         <Row className='my-3'>
                             <Form.Group>
                                 <div style={{marginBottom:"1rem"}} className="d-flex align-items-center">
-                                    <img className="d-flex flex-row bd-highlight" src={(MYSERVER + selectedProduct.image)} placeholder='placeholder.png' style={{ height: '100px', width: '100px', marginRight:'0.5rem' }} />
+                                    <img className="d-flex flex-row bd-highlight" src={(MYSERVER + selectedProduct.image)} alt='placeholder.png' style={{ height: '100px', width: '100px', marginRight:'0.5rem' }} />
                                     <span>{selectedProduct.desc}</span>
                                 </div>
                             </Form.Group>
@@ -69,7 +67,7 @@ const ReviewScreen = () => {
                         <Row className='my-3'>
                             <Form.Group as={Col} controlId="formGridDescription">
                                 <Form.Label className="d-flex flex-row bd-highlight">Description</Form.Label>
-                                <Form.Control onChange={(e) => setDesc(e.target.value)} as='textarea' rows={5} style={{ width: '95%' }} placeholder="More detailed information about your experience, e.g: item cam in good/bad condition, arrived on time/late" />
+                                <Form.Control onChange={(e) => setDesc(e.target.value)} as='textarea' rows={5} style={{ width: '95%' }} placeholder="More detailed information about your experience, e.g: item came in good/bad condition, arrived on time/late" />
                             </Form.Group>
                         </Row>
                         <Row className='my-3'>

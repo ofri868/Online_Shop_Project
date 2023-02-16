@@ -5,7 +5,7 @@ import './App.css';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import Cart from './components/Cart';
 import MyNavbar from './components/navbar';
-import { getToken, loadAuthDetails, loadProfile, selectAuthDetails, selectProfile, selectToken } from './slicers/authSlice';
+import { getToken, loadAuthDetails, loadProfile, selectToken } from './slicers/authSlice';
 import { loadCart } from './slicers/cartSlice';
 import { selectMessage } from './slicers/shopSlice';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,15 +13,11 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   const dispatch = useAppDispatch();
   const myToken = useAppSelector(selectToken)
-  const authDetails = useAppSelector(selectAuthDetails)
-  const profile = useAppSelector(selectProfile)
   const message = useAppSelector(selectMessage)
   useEffect(() => {
     dispatch(getToken())
   }, [dispatch])
-  const notify = ()=>{
-    toast.success(message)
-  }
+  
   useEffect(() => {
     if (myToken) {
       dispatch(loadProfile())
@@ -31,6 +27,9 @@ const App = () => {
   }, [dispatch, myToken])
 
   useEffect(() => {
+    const notify = ()=>{
+      toast.success(message)
+    }
     if(message){
       notify()
     }
@@ -54,7 +53,6 @@ const App = () => {
       />
       <Cart />
       <Outlet />
-      
     </div>
   );
 }

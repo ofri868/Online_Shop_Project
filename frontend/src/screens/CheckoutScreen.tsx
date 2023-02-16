@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { MYSERVER } from '../env';
 import { CartItem } from '../models/CartItem';
 import { selectLogged, selectToken } from '../slicers/authSlice';
-import { calcTotal, selectCart, selectSum, clearCart, increaseAmount, decreaseAmount, loadCart, checkoutAsync, removeFromCart } from '../slicers/cartSlice';
+import { calcTotal, selectCart, selectSum, clearCart, increaseAmount, decreaseAmount, checkoutAsync, removeFromCart } from '../slicers/cartSlice';
 
 const CheckoutScreen = () => {
     const logged = useAppSelector(selectLogged)
@@ -35,22 +35,22 @@ const CheckoutScreen = () => {
                                 <div key={ind} className='mb-2 d-flex align-items-center'>
                                     <img src={MYSERVER + item.product.image} style={{ height: '80px', width: '100px' }} alt='placeholder.png'></img>
                                     <div className='me-auto'>
-                                        <span className='ms-2 my-2'>{item.product.desc}</span>
-                                        <div className='d-flex align-items-center justify-content-center'>
+                                        <span className='ms-2 my-2'>{item.product.title}</span>
+                                        <div className='d-flex align-items-center justify-content-start ms-2'>
                                             <Button className='d-flex align-items-center justify-content-center' style={{ width: '1.5rem', height: '1.5rem' }} variant='success' onClick={() => dispatch(increaseAmount(item.product))}>+</Button>
                                             <span className='mx-2'>{item.amount}</span>
                                             <Button className='d-flex align-items-center justify-content-center' style={{ width: '1.5rem', height: '1.5rem' }} variant='danger' onClick={() => dispatch(decreaseAmount(item.product))}>-</Button>
                                         </div>
                                     </div>
                                     <div className='d-flex align-items-center justify-content-center'>
-                                        <span className='me-2'>Price: {item.amount * item.product.price}₪</span>
+                                        <span className='me-2'>Price: ${item.amount * item.product.price}</span>
                                         <Button variant='outline-danger' className='align-items-center justify-content-center' onClick={() => dispatch(removeFromCart(item.product.id))}>x</Button>
                                     </div>
                                 </div>
                             )
                             }
                             <Card.Footer>
-                                Total: {sum}
+                                Total: ${sum}
                                 <Button variant='outline-danger' className='mx-2' onClick={() => dispatch(clearCart())}>Clear Cart</Button>
                                 <Button variant='primary' onClick={() => handleCheckout(cart)}>Checkout</Button>
                             </Card.Footer>

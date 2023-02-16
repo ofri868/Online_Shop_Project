@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import Order, Product, Profile, Category, Review
-from .serializers import CategorySerializer, OrderDetailSerializer, ProductSerializer, ProfileSerializer, ReviewSerializer
+from .models import Order, Product, Profile, Brand, Scale, Review
+from .serializers import BrandSerializer, OrderDetailSerializer, ProductSerializer, ProfileSerializer, ReviewSerializer, ScaleSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -160,16 +160,29 @@ class ProfileView(APIView):
         return Response(serializer.errors)
 
 #########################################################################
-############################Category API#################################
+##############################Brand API##################################
 #########################################################################
 
-class CategoryView(APIView):
+class BrandView(APIView):
     """This class handle the CRUD operations for Category"""
 
     def get(self, request):
         """Handle GET requests to return a list of Categories"""
-        my_model = Category.objects.all()
-        serializer = CategorySerializer(my_model, many=True)
+        my_model = Brand.objects.all()
+        serializer = BrandSerializer(my_model, many=True)
+        return Response(serializer.data)
+
+#########################################################################
+##############################Scale API##################################
+#########################################################################
+
+class ScaleView(APIView):
+    """This class handle the CRUD operations for Category"""
+
+    def get(self, request):
+        """Handle GET requests to return a list of Categories"""
+        my_model = Scale.objects.all()
+        serializer = ScaleSerializer(my_model, many=True)
         return Response(serializer.data)
 
 #########################################################################

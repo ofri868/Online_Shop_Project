@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { Button, Offcanvas, Stack } from 'react-bootstrap';
+import { Button, Offcanvas } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { MYSERVER } from '../env';
-import { calcTotal, selectCart, selectSum, clearCart, increaseAmount, decreaseAmount, selectShown, showCart, hideCart, removeFromCart } from '../slicers/cartSlice';
+import { calcTotal, selectCart, selectSum, increaseAmount, decreaseAmount, selectShown, hideCart, removeFromCart } from '../slicers/cartSlice';
 
 const Cart = () => {
     const cart = useAppSelector(selectCart);
@@ -29,7 +29,7 @@ const Cart = () => {
                                 <div key={ind} className='d-flex align-items-center '>
                                     <img src={MYSERVER + item.product.image} style={{ height: '80px', width: '100px' }} alt='placeholder.png'></img>
                                     <div className='me-auto'>
-                                        <span className='ms-2 my-2'>{item.product.desc}</span>
+                                        <span className='ms-2 my-2'>{item.product.title}</span>
                                         <div className='d-flex align-items-center justify-content-center'>
                                             <Button className='d-flex align-items-center justify-content-center' style={{ width: '1.5rem', height: '1.5rem' }} variant='success' onClick={() => dispatch(increaseAmount(item.product))}>+</Button>
                                             <span className='mx-2'>{item.amount}</span>
@@ -44,7 +44,7 @@ const Cart = () => {
                             ))}
                             <br />
                             <div className='d-flex align-items-center justify-content-center'>
-                                <div className='d-flex align-items-center me-auto fs-5 fw-bold'>Total: {sum}</div>
+                                <div className='d-flex align-items-center me-auto fs-5 fw-bold'>Total: ${sum}</div>
                                 <div><Link to="/checkout"><Button variant="primary" onClick={() => dispatch(hideCart())} >Checkout</Button></Link></div>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-export interface Category {
+export interface Scale {
     id?: number
     desc: string 
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { logInAsync, registerAsync, selectLogged, selectToken } from '../slicers/authSlice';
 import { Link, useNavigate } from 'react-router-dom'
+import { Form, Row, Col, Button } from 'react-bootstrap';
 
 const RegisterScreen = () => {
     const navigate = useNavigate()
@@ -29,13 +30,39 @@ const RegisterScreen = () => {
     return (
         <div>
             <h1>Sign Up</h1>
-            <form onSubmit={handleRegister}>
-                Username: <input onChange={(e) => setUsername(e.target.value)} type="text" /><br />
-                Password: <input onChange={(e) => setPassword(e.target.value)} type="password" /><br />
-                Email: <input onChange={(e) => setEmail(e.target.value)} type="email" /><br />
-                <button>Sign up</button><br />
-                Already a memeber? <Link to="/login">Log in</Link>
-            </form>
+            <div className='d-flex justify-content-center'>
+            <Form onSubmit={handleRegister}>
+                <Row className='mb-3'>
+                    <Form.Group as={Col} controlId="formGridUsername">
+                        <Form.Label className="d-flex flex-row bd-highlight">Username:</Form.Label>
+                        <Form.Control onChange={(e) => setUsername(e.target.value)} style={{ width: '200px' }} type="text" />
+                    </Form.Group>
+                </Row>
+                <Row className='mb-3'>
+                    <Form.Group as={Col} controlId="formGridPassword">
+                        <Form.Label className="d-flex flex-row bd-highlight">Password:</Form.Label>
+                        <Form.Control onChange={(e) => setPassword(e.target.value)} type='password' style={{ width: '200px' }}/>
+                    </Form.Group>
+                </Row>
+                <Row className='mb-3'>
+                    <Form.Group as={Col} controlId="formGridEmail">
+                        <Form.Label className="d-flex flex-row bd-highlight">Email:</Form.Label>
+                        <Form.Control onChange={(e) => setEmail(e.target.value)} type='email' style={{ width: '200px' }}/>
+                    </Form.Group>
+                </Row>
+                <div className='mb-3'>
+                {username === '' || password === '' || email === '' ?
+                    <Button variant="primary" type="submit" disabled>
+                        Sign up
+                    </Button> :
+                    <Button variant="primary" type="submit">
+                        Sign up
+                    </Button>
+                }
+                </div>
+            </Form>
+            </div>
+            Already a memeber? <Link to="/register">Log in</Link>
         </div>
     )
 }

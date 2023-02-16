@@ -9,9 +9,15 @@ export function getProds() {
   );
 }
 
-export function getCategories() {
+export function getBrands() {
   return new Promise<{ data: any }>((resolve) =>
-    axios.get(MYSERVER + 'category').then((res) => resolve({ data: res.data }))
+    axios.get(MYSERVER + 'brand').then((res) => resolve({ data: res.data }))
+  );
+}
+
+export function getScales() {
+  return new Promise<{ data: any }>((resolve) =>
+    axios.get(MYSERVER + 'scale').then((res) => resolve({ data: res.data }))
   );
 }
 

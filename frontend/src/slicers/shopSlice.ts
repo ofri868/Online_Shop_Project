@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
-import { getProds, addProd, updateProd, deleteProd, getCategories, getReviews, addReview } from '../APIs/shopAPI';
+import { getProds, addProd, updateProd, deleteProd, getReviews, addReview, getBrands, getScales } from '../APIs/shopAPI';
 import { RootState } from '../app/store';
-import { Category } from '../models/Category';
+import { Brand } from '../models/Brand';
 import { Product } from '../models/Product';
 import { Review } from '../models/Review';
+import { Scale } from '../models/Scale';
 
 export interface ShopState {
-  categories: Category[]
+  brands: Brand[]
+  scales: Scale[]
   products: Product[]
   selectedProduct: Product
   reviews: Review[]
@@ -15,10 +17,11 @@ export interface ShopState {
 
 const initialState: ShopState = {
   products: [],
-  categories: [],
-  selectedProduct: { id: -1, image: '', category: { desc: '' }, desc: '', price: 0 },
+  brands: [],
+  selectedProduct: { id: -1, title:'', image: '', brand: { desc: '' }, scale: { desc: '' }, desc: '', price: 0 },
   reviews: [],
-  message: ''
+  message: '',
+  scales: []
 };
 
 export const getProdsAsync = createAsyncThunk(
@@ -29,10 +32,18 @@ export const getProdsAsync = createAsyncThunk(
   }
 );
 
-export const getCategoriesAsync = createAsyncThunk(
-  'product/getCategoriess',
+export const getBrandsAsync = createAsyncThunk(
+  'product/getBrands',
   async () => {
-    const response = await getCategories();
+    const response = await getBrands();
+    return response.data;
+  }
+);
+
+export const getScalesAsync = createAsyncThunk(
+  'product/getScales',
+  async () => {
+    const response = await getScales();
     return response.data;
   }
 );
@@ -94,8 +105,11 @@ export const shopSlice = createSlice({
       .addCase(getProdsAsync.fulfilled, (state, action) => {
         state.products = action.payload
       })
-      .addCase(getCategoriesAsync.fulfilled, (state, action) => {
-        state.categories = action.payload
+      .addCase(getBrandsAsync.fulfilled, (state, action) => {
+        state.brands = action.payload
+      })
+      .addCase(getScalesAsync.fulfilled, (state, action) => {
+        state.scales = action.payload
       })
       .addCase(addProdAsync.fulfilled, (state, action) => {
         state.products = action.payload
@@ -118,7 +132,8 @@ export const shopSlice = createSlice({
 export const { loadSelectedProduct, changeSelectedProduct } = shopSlice.actions;
 export const selectProducts = (state: RootState) => state.shop.products;
 export const selectSingleProduct = (state: RootState) => state.shop.selectedProduct;
-export const selectCategories = (state: RootState) => state.shop.categories;
+export const selectBrands = (state: RootState) => state.shop.brands;
+export const selectScales = (state: RootState) => state.shop.scales;
 export const selectReviews = (state: RootState) => state.shop.reviews;
 export const selectMessage = (state: RootState) => state.shop.message;
 export default shopSlice.reducer;
