@@ -79,7 +79,7 @@ class OrderView(APIView):
 
         if(request.user.id):
             cart_validation = False
-            for item in request.data:
+            for item in request.data['orderDetails']:
                 item['order']=Order.objects.values_list('id', flat=True).filter(user=request.user.id).last()
                 valid_test = OrderDetailSerializer(data=item, context={'user': request.user})
                 if valid_test.is_valid():
@@ -87,9 +87,18 @@ class OrderView(APIView):
                 else:
                     cart_validation = False
             if(cart_validation):
-                new_order = Order(user_id=request.user.id)
+                print(request.data)
+                order = request.data['order']
+                new_order = Order(
+                    user_id=request.user.id,
+                    address = order['address'],
+                    city = order['city'], 
+                    zip_code = order['zip_code'], 
+                    billing_address = order['billing_address'], 
+                    billing_city = order['billing_city'], 
+                    billing_zip_code = order['billing_zip_code'] )
                 new_order.save()
-                for item in request.data:
+                for item in request.data['orderDetails']:
                     item['order']=Order.objects.values_list('id', flat=True).filter(user=request.user.id).last()
                     serializer = OrderDetailSerializer(data=item, context={'user': request.user})
                     if serializer.is_valid():
@@ -104,10 +113,14 @@ class OrderView(APIView):
 class ProductView(APIView):
     """This class handle the CRUD operations for Product"""
 
-    def get(self, request):
+    def get(self, request, msg=''):
         """Handle GET requests to return a list of Product objects"""
-        my_model = Product.objects.all()
-        serializer = ProductSerializer(my_model, many=True)
+        if msg == 'new':
+            my_model = Product.objects.order_by('-createdTime')[:8]
+            serializer = ProductSerializer(my_model, many=True)
+        else:
+            my_model = Product.objects.all()
+            serializer = ProductSerializer(my_model, many=True)
         return Response(serializer.data)
 
     def post(self, request):

@@ -34,6 +34,12 @@ class Product(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    address = models.CharField(max_length=40,null=True,blank=True)
+    city= models.CharField(max_length=40,null=True,blank=True)
+    zip_code = models.CharField(max_length=40,null=True,blank=True)
+    billing_address = models.CharField(max_length=40,null=True,blank=True)
+    billing_city= models.CharField(max_length=40,null=True,blank=True)
+    billing_zip_code = models.CharField(max_length=40,null=True,blank=True)
     createdTime=models.DateTimeField(auto_now_add=True)
 
 class OrderDetail(models.Model):

@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
-import { getProds, addProd, updateProd, deleteProd, getReviews, addReview, getBrands, getScales } from '../APIs/shopAPI';
+import { getProds, addProd, updateProd, deleteProd, getReviews, addReview, getBrands, getScales, getNewProds } from '../APIs/shopAPI';
 import { RootState } from '../app/store';
 import { Brand } from '../models/Brand';
+import { Order } from '../models/Order';
 import { Product } from '../models/Product';
 import { Review } from '../models/Review';
 import { Scale } from '../models/Scale';
@@ -10,24 +11,38 @@ export interface ShopState {
   brands: Brand[]
   scales: Scale[]
   products: Product[]
+  searchedProducts: Product[]
   selectedProduct: Product
   reviews: Review[]
+  orderAddress:Order
   message: string
+  newProducts:Product[]
 }
 
 const initialState: ShopState = {
   products: [],
   brands: [],
-  selectedProduct: { id: -1, title:'', image: '', brand: { desc: '' }, scale: { desc: '' }, desc: '', price: 0 },
+  selectedProduct: { id: -1, title: '', image: '', brand: -1, scale: -1, desc: '', price: 0 },
   reviews: [],
   message: '',
-  scales: []
+  scales: [],
+  orderAddress: { address: '', city: '', zip_code: '', billing_address: '', billing_city: '', billing_zip_code: '' },
+  searchedProducts: [],
+  newProducts: []
 };
 
 export const getProdsAsync = createAsyncThunk(
   'product/getProds',
   async () => {
     const response = await getProds();
+    return response.data;
+  }
+);
+
+export const getNewProdsAsync = createAsyncThunk(
+  'product/getNewProds',
+  async () => {
+    const response = await getNewProds();
     return response.data;
   }
 );
@@ -92,18 +107,29 @@ export const shopSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {
+    setOrderAddress: (state, action)=>{
+      console.log(action.payload)
+      state.orderAddress = action.payload
+    },
     changeSelectedProduct: (state, action) => {
       state.selectedProduct = action.payload
       localStorage.setItem('selectedProduct', JSON.stringify(action.payload))
     },
     loadSelectedProduct: (state) => {
       state.selectedProduct = JSON.parse(localStorage.getItem('selectedProduct') || '{}')
+    },
+    searchProducts: (state, action)=>{
+      state.searchedProducts= action.payload
+      console.log(current(state))
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(getProdsAsync.fulfilled, (state, action) => {
         state.products = action.payload
+      })
+      .addCase(getNewProdsAsync.fulfilled, (state, action) => {
+        state.newProducts = action.payload
       })
       .addCase(getBrandsAsync.fulfilled, (state, action) => {
         state.brands = action.payload
@@ -129,11 +155,14 @@ export const shopSlice = createSlice({
   },
 });
 
-export const { loadSelectedProduct, changeSelectedProduct } = shopSlice.actions;
+export const { loadSelectedProduct, changeSelectedProduct, searchProducts, setOrderAddress } = shopSlice.actions;
 export const selectProducts = (state: RootState) => state.shop.products;
+export const selectSearchedProducts = (state: RootState) => state.shop.searchedProducts;
 export const selectSingleProduct = (state: RootState) => state.shop.selectedProduct;
+export const selectNewProducts = (state: RootState) => state.shop.newProducts;
 export const selectBrands = (state: RootState) => state.shop.brands;
 export const selectScales = (state: RootState) => state.shop.scales;
 export const selectReviews = (state: RootState) => state.shop.reviews;
 export const selectMessage = (state: RootState) => state.shop.message;
+export const selectOrder = (state: RootState) => state.shop.orderAddress;
 export default shopSlice.reducer;

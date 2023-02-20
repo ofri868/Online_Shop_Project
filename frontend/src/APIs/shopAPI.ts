@@ -9,6 +9,12 @@ export function getProds() {
   );
 }
 
+export function getNewProds() {
+  return new Promise<{ data: any }>((resolve) =>
+    axios.get(MYSERVER + 'products/new').then((res) => resolve({ data: res.data }))
+  );
+}
+
 export function getBrands() {
   return new Promise<{ data: any }>((resolve) =>
     axios.get(MYSERVER + 'brand').then((res) => resolve({ data: res.data }))

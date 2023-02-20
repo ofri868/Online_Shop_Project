@@ -57,7 +57,7 @@ const SingleProduct = () => {
     <div>
       <Card>
         <Card.Body>
-          <h3 className="card-title">{selectedProduct.title}</h3>
+          <h3 className="mb-4">{selectedProduct.title}</h3>
           <div className='d-flex justify-content-center'>
             <img src={MYSERVER + selectedProduct.image} style={{ height: '400px', width: '600px', marginRight: '50px' }} alt='placeholder.png' />
             <div>
@@ -65,10 +65,10 @@ const SingleProduct = () => {
               {/* add to cart */}
               <div className='d-flex justify-content-left mb-5'>
                 {inCart(selectedProduct) ?
-                  <div className='d-flex justify-content-center align-items-center'>In your cart:
+                  <div className='d-flex justify-content-center align-items-center'>
+                    <div className='me-1'>In your cart:</div>
                     <Button className='d-flex justify-content-center align-items-center' style={{ width: '25px', height: '25px', paddingTop: '4px' }} variant='success' onClick={() => dispatch(increaseAmount(selectedProduct))}>+</Button>
-                    <input style={{ width: '40px' }} type='number' onChange={(e) => handleCart(selectedProduct, Number(e.target.value))} min={0} value={amountInCart(selectedProduct)} />
-
+                    <input style={{ width: '40px' }} type="text" inputMode="numeric" onChange={(e) => handleCart(selectedProduct, Number(e.target.value))} min={0} value={amountInCart(selectedProduct)} />
                     <Button className='d-flex justify-content-center align-items-center' style={{ width: '25px', height: '25px', paddingTop: '4px' }} variant='danger' onClick={() => dispatch(decreaseAmount(selectedProduct))}>-</Button>
                   </div>
                   :
@@ -142,7 +142,9 @@ const SingleProduct = () => {
           <h4 className='d-flex justify-content-left'>Ratings and Reviews</h4>
         </Card.Header>
         <Card.Body>
-          {reviews.map((review, ind) =>
+          {reviews.length > 0?
+          <div>
+            {reviews.map((review, ind) =>
             <div className='d-flex align-items-top mb-4' key={ind}>
               <div className='me-2'>
                 <div className='d-flex justify-content-left mb-1' style={{ position: 'relative', whiteSpace: 'nowrap', width: '100px' }}>
@@ -162,6 +164,8 @@ const SingleProduct = () => {
               </div>
             </div>
           )}
+          </div>:<div className='d-flex justify-content-start'>No review yet</div>}
+          
         </Card.Body>
       </Card>
     </div>

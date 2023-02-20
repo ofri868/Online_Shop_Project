@@ -7,7 +7,7 @@ import Cart from './components/Cart';
 import MyNavbar from './components/navbar';
 import { getToken, loadAuthDetails, loadProfile, selectToken } from './slicers/authSlice';
 import { loadCart } from './slicers/cartSlice';
-import { selectMessage } from './slicers/shopSlice';
+import { getBrandsAsync, getNewProdsAsync, getProdsAsync, getScalesAsync, selectMessage } from './slicers/shopSlice';
 import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
@@ -16,6 +16,10 @@ const App = () => {
   const message = useAppSelector(selectMessage)
   useEffect(() => {
     dispatch(getToken())
+    dispatch(getProdsAsync())
+    dispatch(getBrandsAsync())
+    dispatch(getScalesAsync())
+    dispatch(getNewProdsAsync())
   }, [dispatch])
   
   useEffect(() => {

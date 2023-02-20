@@ -13,6 +13,7 @@ import EditProfile from './components/EditProfile';
 import SingleProduct from './components/SingleProduct';
 import CheckoutScreen from './screens/CheckoutScreen';
 import ReviewScreen from './screens/ReviewScreen';
+import HomeScreen from './screens/HomeScreen';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -22,7 +23,8 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />}>
+          <Route path="/" element={<App/>}>
+            <Route path="" element={<HomeScreen/>}/>
             <Route path="/login" element={<LoginScreen/>}/>
             <Route path="/register" element={<RegisterScreen/>}/>
             <Route path="/shop" element={<Shop/>}/>

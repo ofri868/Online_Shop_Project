@@ -24,7 +24,7 @@ const ReviewScreen = () => {
         dispatch(loadSelectedProduct())
     }, [dispatch])
 
-    
+
 
     const handleReviewSubmit = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
@@ -37,8 +37,8 @@ const ReviewScreen = () => {
         newReview.username = authDetails.username
 
         console.log(newReview)
-        dispatch(addReviewAsync({newReview, myToken}))
-        
+        dispatch(addReviewAsync({ newReview, myToken }))
+
         navigate('/profile/view')
     }
 
@@ -52,9 +52,9 @@ const ReviewScreen = () => {
                     <Form onSubmit={handleReviewSubmit}>
                         <Row className='my-3'>
                             <Form.Group>
-                                <div style={{marginBottom:"1rem"}} className="d-flex align-items-center">
-                                    <img className="d-flex flex-row bd-highlight" src={(MYSERVER + selectedProduct.image)} alt='placeholder.png' style={{ height: '100px', width: '100px', marginRight:'0.5rem' }} />
-                                    <span>{selectedProduct.desc}</span>
+                                <div style={{ marginBottom: "1rem" }} className="d-flex align-items-center">
+                                    <img className="d-flex flex-row bd-highlight" src={(MYSERVER + selectedProduct.image)} alt='placeholder.png' style={{ height: '100px', width: '140px', marginRight: '0.5rem' }} />
+                                    <span>{selectedProduct.title}</span>
                                 </div>
                             </Form.Group>
                         </Row>
@@ -85,15 +85,9 @@ const ReviewScreen = () => {
                                 </Stack>
                             </Form.Group>
                         </Row>
-                        {rating === -1 || title === '' ?
-                            <Button variant="primary" type="submit" disabled>
-                                Submit Review
-                            </Button> :
-                            <Button variant="primary" type="submit">
-                                Submit Review
-                            </Button>
-                        }
-
+                        <Button variant="primary" type="submit" disabled={rating === -1 || title === ''}>
+                            Submit Review
+                        </Button>
                     </Form>
                 </Card.Body>
             </Card>

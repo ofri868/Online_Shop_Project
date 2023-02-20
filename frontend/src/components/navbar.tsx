@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Form } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -6,8 +8,10 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { MYSERVER } from '../env';
+import { Product } from '../models/Product';
 import { selectLogged, logOutAsync, selectProfile, selectToken, selectRefreshToken, selectAuthDetails } from '../slicers/authSlice';
 import { clearCart, selectCart, showCart } from '../slicers/cartSlice';
+import { searchProducts, selectProducts } from '../slicers/shopSlice';
 
 function MyNavbar() {
   const logged = useAppSelector(selectLogged)
@@ -16,28 +20,56 @@ function MyNavbar() {
   const refreshToken = useAppSelector(selectRefreshToken)
   const profile = useAppSelector(selectProfile)
   const authDetails = useAppSelector(selectAuthDetails)
+  const products = useAppSelector(selectProducts)
   const dispatch = useAppDispatch()
+  const [search, setSearch] = useState('')
 
   const handleLogout = () => {
     dispatch(logOutAsync({ myToken, refreshToken }))
     dispatch(clearCart())
   }
+  const handleSearch = (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    if(search){
+      let searchedProducts:Product[] = []
+      products.forEach(
+        (prod)=>{
+          if(prod.desc.toLowerCase().includes(search.toLowerCase())){
+            searchedProducts.push(prod)
+          }
+        }
+      )
+      dispatch(searchProducts(searchedProducts))
+    }
+  }
   return (
     <Navbar sticky="top" bg="lightgreen" expand="lg" style={{ padding: 0 }}>
       <Container style={{ backgroundColor: 'lightgreen', padding: '0.5rem' }} fluid>
-        <Navbar.Brand as={Link} to="/shop">Navbar scroll</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">Ofri's Model Cars</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-            <Nav.Link as={Link} to="/shop">Home</Nav.Link>
+            <Nav.Link as={Link} to="/shop">Shop</Nav.Link>
             <Nav.Link as={Link} to="/checkout">Checkout</Nav.Link>
+            <Nav>
+              <Form onSubmit={handleSearch} className="d-flex">
+                <Form.Control
+                  type="search"
+                  placeholder="Search"
+                  className="me-2"
+                  aria-label="Search"
+                  onChange={(e)=>setSearch(e.target.value)}
+                />
+                <Button onClick={handleSearch} variant="outline-success">Search</Button>
+              </Form>
+            </Nav>
           </Nav>
           <div className='d-flex'>
             {logged ?
               <div className="d-flex justify-content-center align-items-center">
                 <NavDropdown title={"Welcome, " + (profile.created ? profile.first_name : authDetails.username)} id="navbarScrollingDropdown">
                   <NavDropdown.Item as={Link} to="/profile/view">
-                    <div className="d-flex justify-content-center align-items-center"><img style={{ width: '5rem', height: '7rem', marginBottom: '0.5rem' }} src={MYSERVER + profile.image} alt='placeholder.png'/></div>
+                    <div className="d-flex justify-content-center align-items-center"><img style={{ width: '5rem', height: '7rem', marginBottom: '0.5rem' }} src={MYSERVER + profile.image} alt='placeholder.png' /></div>
                     <div className="d-flex justify-content-center align-items-center" style={{ marginBottom: '0.5rem' }}>{profile.first_name} {profile.last_name}</div>
                     <div className="d-flex justify-content-center align-items-center"><Button >Your profile</Button></div>
                   </NavDropdown.Item>
@@ -70,7 +102,8 @@ function MyNavbar() {
                     transform: 'translate(25%, 25%)',
                     fontSize: '.75rem'
                   }}>{cart.length}
-                </div>}
+                </div>
+                }
             </Button>
           </div>
         </Navbar.Collapse>

@@ -17,8 +17,8 @@ const initialState: CartState = {
 
 export const checkoutAsync = createAsyncThunk(
   'product/checkout',
-  async (data:{order:{product:number | undefined, amount:number}[], myToken:string}) => {
-    const response = await checkout(data.order, data.myToken);
+  async (data:{orderDetails:{product:number | undefined, amount:number}[],order: any, myToken:string}) => {
+    const response = await checkout(data.orderDetails,data.order, data.myToken);
     return response.data;
   }
 );
@@ -95,7 +95,7 @@ export const shopSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(checkoutAsync.fulfilled, (state, action) => {
-        console.log(action.payload)
+        state.cart = []
       })
   },
 });
