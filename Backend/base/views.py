@@ -56,6 +56,18 @@ def register(request):
 def index(request):
     return Response("hello")
 
+@api_view(['GET'])
+def initial_data(request):
+    products = Product.objects.all()
+    brands = Brand.objects.all()
+    scales = Scale.objects.all()
+    new_products = Product.objects.order_by('-createdTime')[:9]
+    brands_serializer = BrandSerializer(brands, many = True)
+    products_serializer = ProductSerializer(products, many = True)
+    new_products_serializer = ProductSerializer(new_products, many = True)
+    scales_serializer = ScaleSerializer(scales, many = True)
+    return Response({'products':products_serializer.data, 'brands':brands_serializer.data, 'scales':scales_serializer.data, 'newProducts':new_products_serializer.data})
+
 
 #########################################################################
 ###############################Order API#################################
@@ -116,7 +128,7 @@ class ProductView(APIView):
     def get(self, request, msg=''):
         """Handle GET requests to return a list of Product objects"""
         if msg == 'new':
-            my_model = Product.objects.order_by('-createdTime')[:8]
+            my_model = Product.objects.order_by('-createdTime')[:9]
             serializer = ProductSerializer(my_model, many=True)
         else:
             my_model = Product.objects.all()

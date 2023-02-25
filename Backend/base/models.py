@@ -70,7 +70,7 @@ class Profile(models.Model):
     
     def __str__(self):
         if self.created:
-           return self.first_name + self.last_name
+           return f'{self.first_name} {self.last_name}'
         else:
            return self.user
 

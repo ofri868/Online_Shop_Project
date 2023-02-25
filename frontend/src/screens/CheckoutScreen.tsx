@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import PayPalCheckout from '../components/PayPalCheckout';
 import { MYSERVER, PAYPAL_CLIENT_ID } from '../env';
 import { CartItem } from '../models/CartItem';
 import { selectLogged, selectProfile, selectToken } from '../slicers/authSlice';
@@ -29,13 +28,13 @@ const CheckoutScreen = () => {
     const [billingAddress, setBillingAddress] = useState('')
     const [billingCity, setBillingCity] = useState('')
     const [billingZipCode, setBillingZipCode] = useState('')
-    const [approved, setapproved] = useState(false)
+    const [approved, setApproved] = useState(false)
 
     const initialOptions = {
         "client-id": PAYPAL_CLIENT_ID,
         currency: "USD",
         intent: "capture",
-      };
+    };
 
     const SwitchKey = (key: string | null) => {
         if (key) {
@@ -53,7 +52,7 @@ const CheckoutScreen = () => {
             setCity(profile.city)
             setZipCode(profile.zip_code)
         }
-        else{
+        else {
             setAddress('')
             setCity('')
             setZipCode('')
@@ -66,7 +65,7 @@ const CheckoutScreen = () => {
             setBillingCity(city)
             setBillingZipCode(zipCode)
         }
-        else{
+        else {
             setBillingAddress('')
             setBillingCity('')
             setBillingZipCode('')
@@ -74,16 +73,16 @@ const CheckoutScreen = () => {
     }, [billing])
 
     useEffect(() => {
-        if(approved){
+        if (approved) {
             handleCheckout()
-        }   
+        }
     }, [approved])
 
 
     const handleShipping = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
 
-        const tempOrder: Order = {address:'', city:'', zip_code:'', billing_address:'', billing_city:'', billing_zip_code:''}
+        const tempOrder: Order = { address: '', city: '', zip_code: '', billing_address: '', billing_city: '', billing_zip_code: '' }
         tempOrder['address'] = address
         tempOrder['city'] = city
         tempOrder['zip_code'] = zipCode
@@ -92,7 +91,7 @@ const CheckoutScreen = () => {
         tempOrder['billing_zip_code'] = billingZipCode
         dispatch(setOrderAddress(tempOrder))
     }
-    
+
     const checkFormFill = () => {
         if (address && city && zipCode && billingAddress && billingCity && billingZipCode) {
             return true
@@ -107,7 +106,7 @@ const CheckoutScreen = () => {
         for (let i = 0; i < cart.length; i++) {
             orderDetails.push({ "product": cart[i].product.id, "amount": cart[i].amount })
         }
-        dispatch(checkoutAsync({orderDetails,order,myToken}))
+        dispatch(checkoutAsync({ orderDetails, order, myToken }))
     }
     return (
         <div>
@@ -154,11 +153,14 @@ const CheckoutScreen = () => {
                             <Tab eventKey='shipping' title="Billing & Shipping" disabled={key === 'review'}>
                                 <Card.Body>
                                     <Form onSubmit={handleShipping}>
-                                        <Row>
-                                            <Form.Group className="mb-3" id="formGridCheckbox">
-                                                <Form.Check onChange={() => setSavedAddress(!savedAddress)} className="d-flex flex-row bd-highlight" type="checkbox" label="Use my saved address" value={+savedAddress} />
-                                            </Form.Group>
-                                        </Row>
+                                        {profile.address && profile.city && profile.zip_code &&
+                                            <Row>
+                                                <Form.Group className="mb-3" id="formGridCheckbox">
+                                                    <Form.Check onChange={() => setSavedAddress(!savedAddress)} className="d-flex flex-row bd-highlight" type="checkbox" label="Use my saved address" value={+savedAddress} />
+                                                </Form.Group>
+                                            </Row>
+                                        }
+
                                         {!savedAddress &&
                                             <Row className="mb-3">
                                                 <Form.Group className="mb-3" controlId="formGridAddress">
@@ -208,23 +210,24 @@ const CheckoutScreen = () => {
                             </Tab>
                             {/* Payment tab */}
                             <Tab eventKey='payment' title="Payment" disabled={(key === 'review') || (key === 'shipping')} >
+
                                 <PayPalScriptProvider options={initialOptions} >
-                                    <PayPalButtons 
-                                    createOrder={(data, actions) => {
-                                        return actions.order.create({
-                                            purchase_units:[{
-                                                amount:{
-                                                    value:sum.toString()
-                                                }
-                                            }]
-                                        })
-                                    }}
-                                    onApprove={async(data, actions)=>{
-                                        const details = await actions.order?.capture();
-                                        const name =details?.payer.name?.given_name
-                                        setapproved(true)
-                                    }}
-                                        />
+                                    <PayPalButtons
+                                        createOrder={(data, actions) => {
+                                            return actions.order.create({
+                                                purchase_units: [{
+                                                    amount: {
+                                                        value: sum.toString()
+                                                    }
+                                                }]
+                                            })
+                                        }}
+                                        onApprove={async (data, actions) => {
+                                            const details = await actions.order?.capture();
+                                            const name = details?.payer.name?.given_name
+                                            setApproved(true)
+                                        }}
+                                    />
                                 </PayPalScriptProvider>
                             </Tab>
                         </Tabs>

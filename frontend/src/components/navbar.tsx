@@ -5,7 +5,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { Link } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { MYSERVER } from '../env';
 import { Product } from '../models/Product';
@@ -22,6 +23,7 @@ function MyNavbar() {
   const authDetails = useAppSelector(selectAuthDetails)
   const products = useAppSelector(selectProducts)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
 
   const handleLogout = () => {
@@ -30,17 +32,16 @@ function MyNavbar() {
   }
   const handleSearch = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    if(search){
-      let searchedProducts:Product[] = []
-      products.forEach(
-        (prod)=>{
-          if(prod.desc.toLowerCase().includes(search.toLowerCase())){
-            searchedProducts.push(prod)
-          }
+    let searchedProducts: Product[] = []
+    products.forEach(
+      (prod) => {
+        if (prod.desc.toLowerCase().includes(search.toLowerCase())) {
+          searchedProducts.push(prod)
         }
-      )
-      dispatch(searchProducts(searchedProducts))
-    }
+      }
+    )
+    dispatch(searchProducts(searchedProducts))
+    navigate('/shop')
   }
   return (
     <Navbar sticky="top" bg="lightgreen" expand="lg" style={{ padding: 0 }}>
@@ -48,19 +49,21 @@ function MyNavbar() {
         <Navbar.Brand as={Link} to="/">Ofri's Model Cars</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
+          <Nav className="align-items-center me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
             <Nav.Link as={Link} to="/shop">Shop</Nav.Link>
             <Nav.Link as={Link} to="/checkout">Checkout</Nav.Link>
             <Nav>
               <Form onSubmit={handleSearch} className="d-flex">
-                <Form.Control
-                  type="search"
-                  placeholder="Search"
-                  className="me-2"
-                  aria-label="Search"
-                  onChange={(e)=>setSearch(e.target.value)}
-                />
-                <Button onClick={handleSearch} variant="outline-success">Search</Button>
+                <div className='d-flex'>
+                  <Form.Control
+                    type="text"
+                    placeholder="Search"
+                    className="me-2"
+                    aria-label="Search"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <Button className='rounded-circle search-button' style={{ height: '50px', width: '50px', position: 'absolute', left: '475px', top: '7px' }} onClick={handleSearch} variant='transparent'><SearchIcon /></Button>
+                </div>
               </Form>
             </Nav>
           </Nav>
@@ -71,7 +74,7 @@ function MyNavbar() {
                   <NavDropdown.Item as={Link} to="/profile/view">
                     <div className="d-flex justify-content-center align-items-center"><img style={{ width: '5rem', height: '7rem', marginBottom: '0.5rem' }} src={MYSERVER + profile.image} alt='placeholder.png' /></div>
                     <div className="d-flex justify-content-center align-items-center" style={{ marginBottom: '0.5rem' }}>{profile.first_name} {profile.last_name}</div>
-                    <div className="d-flex justify-content-center align-items-center"><Button >Your profile</Button></div>
+                    <div className="d-flex justify-content-center align-items-center">Your profile</div>
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/shop">
                     <div className="d-flex justify-content-center align-items-center" style={{ margin: 'auto' }}>
@@ -103,7 +106,7 @@ function MyNavbar() {
                     fontSize: '.75rem'
                   }}>{cart.length}
                 </div>
-                }
+              }
             </Button>
           </div>
         </Navbar.Collapse>

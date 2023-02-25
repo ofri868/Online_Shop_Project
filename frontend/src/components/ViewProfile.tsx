@@ -12,16 +12,16 @@ const ViewProfile = () => {
 
     return (
         <div>
-            {profile.created ? <section className="vh-100" style={{ backgroundColor: '#f4f5f7' }}>
-                <MDBContainer className="py-5 h-100">
-                    <MDBRow className="justify-content-center align-items-center h-100">
-                        <MDBCol lg="6" className="mb-4 mb-lg-0">
+            {profile.created ? <section className="vh-100">
+                <MDBContainer className="py-2" style={{ backgroundColor: 'white' }}>
+                    <MDBRow className="justify-content-left align-items-center">
+                        <MDBCol lg="6" style={{width:'700px'}}>
                             <MDBCard className="mb-3" style={{ borderRadius: '.5rem' }}>
                                 <MDBRow className="g-0">
                                     <MDBCol md="4" className="gradient-custom text-center text-black"
                                         style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
                                         <MDBCardImage src={MYSERVER + profile.image}
-                                            alt={MYSERVER + "/images/profile.png"} className="my-5" style={{ width: '80px' }} fluid />
+                                            alt={MYSERVER + "/images/profile.png"} className="my-4" style={{ width: '80px' }} fluid />
                                         <MDBTypography tag="h5">{profile.first_name} {profile.last_name}</MDBTypography>
                                         <MDBIcon far icon="edit mb-5" />
                                         <Link to="/profile/edit"><Button >Edit Profile</Button></Link>

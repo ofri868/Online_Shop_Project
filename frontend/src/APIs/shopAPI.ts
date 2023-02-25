@@ -3,15 +3,15 @@ import { MYSERVER } from "../env";
 import { Product } from "../models/Product";
 import { Review } from "../models/Review";
 
-export function getProds() {
+export function getInitData() {
   return new Promise<{ data: any }>((resolve) =>
-    axios.get(MYSERVER + 'products').then((res) => resolve({ data: res.data }))
+    axios.get(MYSERVER + 'init').then((res) => resolve({ data: res.data }))
   );
 }
 
-export function getNewProds() {
+export function getProds() {
   return new Promise<{ data: any }>((resolve) =>
-    axios.get(MYSERVER + 'products/new').then((res) => resolve({ data: res.data }))
+    axios.get(MYSERVER + 'products').then((res) => resolve({ data: res.data }))
   );
 }
 
