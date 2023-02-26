@@ -52,7 +52,6 @@ const SingleProduct = () => {
   }
 
   const handleCart = (product: Product, amount: number) => {
-    console.log(product)
     dispatch(addToCart({ product, amount }))
   }
   const element = document.getElementById('top')

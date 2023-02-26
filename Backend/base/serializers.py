@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import  Brand, OrderDetail, Product, Profile, Review, Scale
+from .models import  Brand, Order, OrderDetail, Product, Profile, Review, Scale
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
@@ -8,6 +8,13 @@ class OrderDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
     def create(self, validated_data):
         return OrderDetail.objects.create(**validated_data)
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
+    def create(self, validated_data):
+        return Order.objects.create(**validated_data)
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:

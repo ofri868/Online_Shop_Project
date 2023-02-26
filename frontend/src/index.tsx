@@ -15,6 +15,7 @@ import CheckoutScreen from './screens/CheckoutScreen';
 import ReviewScreen from './screens/ReviewScreen';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import MyOrders from './components/MyOrders';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -33,6 +34,7 @@ root.render(
             <Route path="/shop/product" element={<SingleProduct />} />
             <Route path="/profile" element={<ProfileScreen />}>
               <Route path="/profile/view" element={<ViewProfile />} />
+              <Route path="/profile/orders" element={<MyOrders />} />
               <Route path="/profile/edit" element={<EditProfile />} />
             </Route>
             <Route path="/review" element={<ReviewScreen />} />

@@ -25,7 +25,10 @@ const ReviewScreen = () => {
         dispatch(loadSelectedProduct())
     }, [dispatch])
 
-
+    useEffect(() => {
+      console.log(reviewAllowed)
+    }, [reviewAllowed])
+    
 
     const handleReviewSubmit = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
@@ -36,7 +39,6 @@ const ReviewScreen = () => {
         newReview.product = selectedProduct.id
         newReview.user = profile.user
         newReview.username = authDetails.username
-        console.log(newReview)
         dispatch(disallowReview())
         dispatch(addReviewAsync({ newReview, myToken }))
         navigate('/profile/view')

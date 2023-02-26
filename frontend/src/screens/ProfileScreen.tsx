@@ -18,7 +18,7 @@ const ProfileScreen = () => {
               <Nav defaultActiveKey="home" className="flex-column pe-3" style={{width:'200px'}}>
                 <Nav.Link as={Link} to='/profile/view' eventKey="home">My Profile</Nav.Link>
                 <hr className='my-1'/>
-                <Nav.Link as={Link} to='/profile/view' eventKey="link-1">My Order</Nav.Link>
+                <Nav.Link as={Link} to='/profile/orders' eventKey="link-1">My Orders</Nav.Link>
                 <hr className='my-1'/>
                 <Nav.Link as={Link} to='/profile/view' eventKey="link-2">Link</Nav.Link>
                 <hr className='my-1'/>

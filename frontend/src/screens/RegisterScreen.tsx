@@ -16,7 +16,6 @@ const RegisterScreen = () => {
         if (logged) {
             if (myToken === '') {
                 dispatch(logInAsync({ username, password }))
-                console.log(myToken)
             }
             navigate('/shop')
         }

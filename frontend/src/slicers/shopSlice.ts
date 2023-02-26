@@ -110,7 +110,6 @@ export const shopSlice = createSlice({
   initialState,
   reducers: {
     setOrderAddress: (state, action)=>{
-      console.log(action.payload)
       state.orderAddress = action.payload
     },
     changeSelectedProduct: (state, action) => {

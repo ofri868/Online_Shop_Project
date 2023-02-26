@@ -30,6 +30,11 @@ export function getAuthData(myToken:string) {
     axios.get(MYSERVER + 'profile', {headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
   );
 }
+export function getUserOrders(myToken:string) {
+  return new Promise<{ data: any[] }>((resolve) =>
+    axios.get(MYSERVER + 'user_orders', {headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
+  );
+}
 
 export function updProfile(newProf:FormData, token:string) {
   return new Promise<{ data: any }>((resolve) =>

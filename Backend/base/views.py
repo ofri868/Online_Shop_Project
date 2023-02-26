@@ -5,11 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import Order, Product, Profile, Brand, Scale, Review
-from .serializers import BrandSerializer, OrderDetailSerializer, ProductSerializer, ProfileSerializer, ReviewSerializer, ScaleSerializer
+from .models import Order, OrderDetail, Product, Profile, Brand, Scale, Review
+from .serializers import BrandSerializer, OrderDetailSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, ReviewSerializer, ScaleSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-
 #  /////////////// login start
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -50,12 +49,7 @@ def register(request):
 
 # /////////////////////// login end
 
-# public index
-
-@api_view(['GET'])
-def index(request):
-    return Response("hello")
-
+# Get initial data for the shop
 @api_view(['GET'])
 def initial_data(request):
     products = Product.objects.all()
@@ -68,6 +62,23 @@ def initial_data(request):
     scales_serializer = ScaleSerializer(scales, many = True)
     return Response({'products':products_serializer.data, 'brands':brands_serializer.data, 'scales':scales_serializer.data, 'newProducts':new_products_serializer.data})
 
+# Get user order history
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_orders(request):
+    orders = OrderSerializer(Order.objects.filter(user=request.user.id), many=True)
+    res = []
+    for order in orders.data:
+        orders_details = OrderDetailSerializer(OrderDetail.objects.filter(order__id=order['id']), many=True).data
+        for item in orders_details:
+            order['product'] = ProductSerializer(Product.objects.get(id=item['product'])).data
+            order['createdTime'] = order['createdTime'].split('T',1)[0]
+            temp = order['createdTime'].split('-',2)
+            temp.reverse()
+            order['createdTime'] = '-'.join(temp)
+            res.append(order)
+
+    return Response(res)
 
 #########################################################################
 ###############################Order API#################################
@@ -83,7 +94,7 @@ class OrderView(APIView):
         """Handle GET requests to return a list of Orders"""
         temp = Order.objects.all()
         my_model = temp.filter(user=request.user.id)
-        serializer = OrderDetailSerializer(my_model, many=True)
+        serializer = OrderSerializer(my_model, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -180,6 +191,7 @@ class ProfileView(APIView):
         my_model = Profile.objects.get(user=request.user.id)
         serializer = ProfileSerializer(my_model, data=request.data)
         if serializer.is_valid():
+            # Profile.objects.get(user=request.user.id).image.delete(save=True)
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)

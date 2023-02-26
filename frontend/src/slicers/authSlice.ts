@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
-import { getAuthData, getProfile, logIn, logOut, register, updProfile } from '../APIs/authAPI';
+import { getAuthData, getProfile, getUserOrders, logIn, logOut, register, updProfile } from '../APIs/authAPI';
 import { RootState } from '../app/store';
 import { AuthDetails } from '../models/AuthDetails';
+import { OrderDetail } from '../models/OrderDetail';
 import { Profile } from '../models/Profile';
 
 export interface AuthenticationState {
@@ -11,6 +12,7 @@ export interface AuthenticationState {
   logged: boolean
   userProfile: Profile
   userAuthDetails: AuthDetails
+  userOrders: OrderDetail[]
 }
 
 const initialState: AuthenticationState = {
@@ -18,7 +20,8 @@ const initialState: AuthenticationState = {
   logged: false,
   userProfile: { created: false, first_name: '', last_name: '', address: '', city: '', zip_code: '', billing_address: '', billing_city: '', billing_zip_code: '', image: '' },
   refreshToken: '',
-  userAuthDetails: {}
+  userAuthDetails: {},
+  userOrders: []
 };
 
 export const logInAsync = createAsyncThunk(
@@ -63,6 +66,14 @@ export const registerAsync = createAsyncThunk(
   'auth/addProd',
   async (creds: {username:string, password:string, email:string}) => {
     const response = await register(creds.username, creds.password, creds.email);
+    return response.data;
+  }
+);
+
+export const getUserOrdersAsync = createAsyncThunk(
+  'auth/getUserOrders',
+  async (myToken: string) => {
+    const response = await getUserOrders(myToken);
     return response.data;
   }
 );
@@ -115,20 +126,23 @@ export const authSlice = createSlice({
       .addCase(registerAsync.fulfilled, (state, action) => {
         state.myToken = ''
         state.logged = true
-      }).addCase(getProfileAsync.fulfilled, (state, action) => {
+      })
+      .addCase(getProfileAsync.fulfilled, (state, action) => {
         state.userProfile = action.payload[0]
         sessionStorage.setItem("profile", JSON.stringify(action.payload[0]))
       })
       .addCase(updProfileAsync.fulfilled, (state, action) => {
-        state.userProfile = action.payload
-        
+        state.userProfile = action.payload 
       })
-
+      .addCase(getUserOrdersAsync.fulfilled, (state, action)=>{
+        state.userOrders = action.payload
+      })
   },
 });
 
 export const { getToken, changeProfile, loadProfile, loadAuthDetails } = authSlice.actions;
 export const selectToken = (state: RootState) => state.auth.myToken;
+export const selectUserOrders = (state: RootState) => state.auth.userOrders;
 export const selectRefreshToken = (state: RootState) => state.auth.refreshToken;
 export const selectLogged = (state: RootState) => state.auth.logged;
 export const selectProfile = (state: RootState) => state.auth.userProfile;

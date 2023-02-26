@@ -71,7 +71,6 @@ export function Shop() {
       setShownProducts(temp)
       const element = document.getElementById('shop')
       if (element) {
-        console.log('first')
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }
