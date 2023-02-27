@@ -98,7 +98,7 @@ const SingleProduct = () => {
                       Worldwide Shipping!
                     </h5>
                     <div className='d-flex justify-content-left'>
-                      From $9.90
+                      From $10
                     </div>
                   </div>
                 </div>

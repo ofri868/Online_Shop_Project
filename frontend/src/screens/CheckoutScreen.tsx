@@ -114,7 +114,7 @@ const CheckoutScreen = () => {
         <div>
             {logged ?
                 <div>
-                    <Card style={{ width: '60%', margin: 'auto' }}>
+                    <Card className='mt-2' style={{ width: '80%', margin: 'auto' }}>
                         <Tabs activeKey={key} onSelect={(k) => SwitchKey(k)} className="mb-3">
                             {/* Cart review tab */}
                             <Tab eventKey='review' title="Review Your Order" >
@@ -138,6 +138,10 @@ const CheckoutScreen = () => {
                                             </div>
                                         )
                                         }
+                                        <div className='d-flex align-items-center justify-content-center mb-4'>
+                                            <div className='d-flex align-items-center me-auto fs-6'>Shipping:</div>
+                                            <div>$10</div>
+                                        </div>
                                         <Card.Footer>
                                             Total: ${sum}
                                             <Button variant='outline-danger' className='mx-2' onClick={() => dispatch(clearCart())}>Clear Cart</Button>
@@ -146,7 +150,7 @@ const CheckoutScreen = () => {
                                     </div>
                                     :
                                     <div>
-                                        You have no items in your cart<br></br>
+                                        <div className='mb-4'>You have no items in your cart</div>
                                         <Link to="/shop"><Button variant="primary" >Back to Shop</Button></Link>
                                     </div>}
                                 </Card.Body>
@@ -212,25 +216,59 @@ const CheckoutScreen = () => {
                             </Tab>
                             {/* Payment tab */}
                             <Tab eventKey='payment' title="Payment" disabled={(key === 'review') || (key === 'shipping')} >
-
-                                <PayPalScriptProvider options={initialOptions} >
-                                    <PayPalButtons
-                                        createOrder={(data, actions) => {
-                                            return actions.order.create({
-                                                purchase_units: [{
-                                                    amount: {
-                                                        value: sum.toString()
-                                                    }
-                                                }]
-                                            })
-                                        }}
-                                        onApprove={async (data, actions) => {
-                                            const details = await actions.order?.capture();
-                                            const name = details?.payer.name?.given_name
-                                            setApproved(true)
-                                        }}
-                                    />
-                                </PayPalScriptProvider>
+                                <div className='d-flex justify-content-center px-3'>
+                                    <div>
+                                        <h4 style={{ textAlign: 'left' }}>Summary:</h4>
+                                        <div>
+                                            {cart.map((item: CartItem, ind: number) =>
+                                                <div key={ind} className='mb-2 d-flex align-items-center'>
+                                                    <img src={MYSERVER + item.product.image} style={{ height: '80px', width: '100px' }} alt='placeholder.png'></img>
+                                                    <div className='me-auto'>
+                                                        <span className='ms-2 my-2'>{item.product.title}</span>
+                                                        <div className='d-flex align-items-center justify-content-start ms-2'>
+                                                            <Button className='d-flex align-items-center justify-content-center' style={{ width: '1.5rem', height: '1.5rem' }} variant='success' onClick={() => dispatch(increaseAmount(item.product))}>+</Button>
+                                                            <span className='mx-2'>{item.amount}</span>
+                                                            <Button className='d-flex align-items-center justify-content-center' style={{ width: '1.5rem', height: '1.5rem' }} variant='danger' onClick={() => dispatch(decreaseAmount(item.product))}>-</Button>
+                                                        </div>
+                                                    </div>
+                                                    <div className='d-flex align-items-center justify-content-center'>
+                                                        <span className='ms-4 me-2'>Price: ${item.amount * item.product.price}</span>
+                                                    </div>
+                                                </div>)
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className='ms-auto'>
+                                        <div className='ms-2'>
+                                            <div className='d-flex justify-content-start fw-bold'>Address:</div>
+                                            <div className='d-flex justify-content-start mb-3'>{address}, {city}, {zipCode}</div>
+                                            <div className='d-flex justify-content-start fw-bold'>Billing address:</div>
+                                            <div className='d-flex justify-content-start mb-3'>{billingAddress}, {billingCity}, {billingZipCode}</div>
+                                            <hr />
+                                            <h5 className='d-flex justify-content-start mb-3'>Total: ${sum}</h5>
+                                        </div>
+                                        <div>
+                                            <PayPalScriptProvider options={initialOptions} >
+                                                <PayPalButtons
+                                                    createOrder={(data, actions) => {
+                                                        return actions.order.create({
+                                                            purchase_units: [{
+                                                                amount: {
+                                                                    value: sum.toString()
+                                                                }
+                                                            }]
+                                                        })
+                                                    }}
+                                                    onApprove={async (data, actions) => {
+                                                        const details = await actions.order?.capture();
+                                                        const name = details?.payer.name?.given_name
+                                                        setApproved(true)
+                                                    }}
+                                                />
+                                            </PayPalScriptProvider>
+                                        </div>
+                                    </div>
+                                </div>
                             </Tab>
                         </Tabs>
                     </Card>

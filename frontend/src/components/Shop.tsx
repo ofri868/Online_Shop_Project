@@ -161,7 +161,6 @@ export function Shop() {
                   {brands.map((brand, ind) =>
                     <option key={ind} value={brand.id}>{brand.desc}</option>)}
                 </select>
-                {authDetails.isAdmin && <div className='ms-1'><Button className='px-0 pt-0' style={{width: '25px', height: '25px', paddingBottom:'1px'}} variant='success'>+</Button></div>}
               </div>
               <div className='d-flex'>
                 <span className='me-2'>Scale:</span>

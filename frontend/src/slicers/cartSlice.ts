@@ -70,6 +70,9 @@ export const shopSlice = createSlice({
       for (let i = 0; i < state.cart.length; i++) {
         tempsum += (state.cart[i].amount * state.cart[i].product.price)
       }
+      if(state.cart.length > 0){
+        tempsum += 10
+      }
       state.sum = tempsum
     },
     clearCart:(state)=>{

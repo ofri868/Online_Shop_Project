@@ -41,7 +41,7 @@ const ViewProfile = () => {
                                                 </MDBCol>
                                             </MDBRow>
 
-                                            <MDBTypography className='mt-2' tag="h6">Shipping information</MDBTypography>
+                                            <MDBTypography className='mt-2' tag="h6">Shipping & billing information</MDBTypography>
                                             <hr className="mt-0 mb-3" />
                                             <MDBRow>
                                                 <MDBCol size="4" className="mb-3">
