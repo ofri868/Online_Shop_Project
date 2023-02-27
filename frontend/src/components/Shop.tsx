@@ -177,8 +177,8 @@ export function Shop() {
           <div style={{ width: '100%' }} className="row row-cols-1 row-cols-md-4 g-4 me-1">
             {shownProducts.map((product: Product, ind: number) =>
               <div key={ind}>
-                <div className="col mx-1">
-                  <Card style={{ height: '340px', marginBottom: "20px" }}>
+                <div className="col mx-1" style={{ height: '100%', marginBottom: "20px" }}>
+                  <Card style={{ height: '100%'}}>
                     <Card.Body>
                       <Link to={'/shop/product#pageTop'} onClick={() => dispatch(changeSelectedProduct(product))}><img src={MYSERVER + product.image} style={{ height: '100px', width: '140px', marginBottom: '20px' }} alt='placeholder.png'></img></Link>
                       <div>{scales[product.scale - 1].desc + ' • ' + brands[product.brand - 1].desc}</div>

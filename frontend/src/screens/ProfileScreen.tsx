@@ -15,7 +15,7 @@ const ProfileScreen = () => {
           <hr/>
           <div className='d-flex'>
             <div>
-              <Nav defaultActiveKey="home" className="flex-column pe-3" style={{width:'200px'}}>
+              <Nav defaultActiveKey="home" className="flex-column pe-3" style={{width:'100%'}}>
                 <Nav.Link as={Link} to='/profile/view' eventKey="home">My Profile</Nav.Link>
                 <hr className='my-1'/>
                 <Nav.Link as={Link} to='/profile/orders' eventKey="link-1">My Orders</Nav.Link>

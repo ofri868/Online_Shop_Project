@@ -114,7 +114,7 @@ const CheckoutScreen = () => {
         <div>
             {logged ?
                 <div>
-                    <Card className='mt-2' style={{ width: '80%', margin: 'auto' }}>
+                    <Card className='mt-2' style={{ width: '65%', margin: 'auto' }}>
                         <Tabs activeKey={key} onSelect={(k) => SwitchKey(k)} className="mb-3">
                             {/* Cart review tab */}
                             <Tab eventKey='review' title="Review Your Order" >
@@ -217,7 +217,7 @@ const CheckoutScreen = () => {
                             {/* Payment tab */}
                             <Tab eventKey='payment' title="Payment" disabled={(key === 'review') || (key === 'shipping')} >
                                 <div className='d-flex justify-content-center px-3'>
-                                    <div>
+                                    <div className='me-3'>
                                         <h4 style={{ textAlign: 'left' }}>Summary:</h4>
                                         <div>
                                             {cart.map((item: CartItem, ind: number) =>
@@ -238,7 +238,7 @@ const CheckoutScreen = () => {
                                             }
                                         </div>
                                     </div>
-                                    <div className='ms-auto'>
+                                    <div>
                                         <div className='ms-2'>
                                             <div className='d-flex justify-content-start fw-bold'>Address:</div>
                                             <div className='d-flex justify-content-start mb-3'>{address}, {city}, {zipCode}</div>

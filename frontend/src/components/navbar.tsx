@@ -44,7 +44,7 @@ function MyNavbar() {
     navigate('/shop')
   }
   return (
-    <Navbar sticky="top" bg="lightgreen" expand="lg" style={{ padding: 0 }}>
+    <Navbar sticky="top" bg="lightgreen" expand="lg" style={{ padding: 0, width: '100%' }}>
       <Container style={{ backgroundColor: 'lightgreen', padding: '0.5rem' }} fluid>
         <Navbar.Brand as={Link} to="/">Ofri's Model Cars</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
@@ -54,15 +54,16 @@ function MyNavbar() {
             <Nav.Link as={Link} to="/checkout">Checkout</Nav.Link>
             <Nav>
               <Form onSubmit={handleSearch} className="d-flex">
-                <div className='d-flex'>
+                <div className='d-flex align-items-center'>
                   <Form.Control
                     type="text"
                     placeholder="Search"
                     className="me-2"
                     aria-label="Search"
                     onChange={(e) => setSearch(e.target.value)}
+                    style={{height:'75%'}}
                   />
-                  <Button className='rounded-circle search-button' style={{ height: '50px', width: '50px', position: 'absolute', left: '475px', top: '7px' }} onClick={handleSearch} variant='transparent'><SearchIcon /></Button>
+                  <Button className='rounded-circle search-button' style={{ height: '50px', width: '50px', transform: 'translate(-105%, 0%)'}} onClick={handleSearch} variant='transparent'><SearchIcon /></Button>
                 </div>
               </Form>
             </Nav>

@@ -34,13 +34,13 @@ const MyOrders = () => {
                         <div className='d-flex justify-content-start'>
                             <div><img style={{width:'140px', height:'100px'}} src={MYSERVER + order.product.image} alt='placeholder.png'></img></div>
                             <div className='ms-2 me-auto'>
-                                <div style={{fontWeight:'bold'}} className='fs-5 mb-2'>{order.product.title}</div>
+                                <div style={{fontWeight:'bold', textAlign: 'left'}} className='fs-5 mb-2'>{order.product.title}</div>
                                 <div className='d-flex justify-content-start '>Order date: {order.createdTime}</div>
                             </div>
                             <div className='me-2 pt-1'>${order.product.price}</div>
                             <div>
-                                <div><Link to={'/shop/product#pageTop'}><Button onClick={() => dispatch(changeSelectedProduct(order.product))} style={{width:'170px', borderRadius: 0 }}>Go to product page</Button></Link></div>
-                                {order.reviewed?<div  className='mt-2'><Button style={{width:'170px', borderRadius: 0 }} variant='outline-primary' disabled>Reviewed</Button></div> :<div  className='mt-2'><Button style={{width:'170px', borderRadius: 0 }} onClick={() => handleReview(order.product , order.id)} variant='outline-primary'>Write a review</Button></div> }
+                                <div><Link to={'/shop/product#pageTop'}><Button onClick={() => dispatch(changeSelectedProduct(order.product))} style={{width:'100%', borderRadius: 0 }}>Go to product page</Button></Link></div>
+                                {order.reviewed?<div  className='mt-2'><Button style={{width:'100%', borderRadius: 0 }} variant='outline-primary' disabled>Reviewed</Button></div> :<div  className='mt-2'><Button style={{width:'100%', borderRadius: 0 }} onClick={() => handleReview(order.product , order.id)} variant='outline-primary'>Write a review</Button></div> }
                             </div>
                         </div>
                         {ind !== orders.length -1 && <hr />}
