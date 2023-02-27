@@ -206,7 +206,7 @@ export function Shop() {
         }
 
       </div>
-      <div className='d-flex justify-content-center align-items'>
+      <div className='d-flex justify-content-center align-items mt-2'>
         <Stack spacing={2}>
           <Pagination count={Math.ceil(filteredProducts.length / 8)} page={page} onChange={movePage} color='primary'></Pagination>
         </Stack>
