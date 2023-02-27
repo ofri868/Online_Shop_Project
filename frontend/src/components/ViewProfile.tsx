@@ -12,10 +12,10 @@ const ViewProfile = () => {
 
     return (
         <div>
-            {profile.created ? <section className="vh-100">
+            {profile.created ?
                 <MDBContainer className="py-2" style={{ backgroundColor: 'white' }}>
                     <MDBRow className="justify-content-left align-items-center">
-                        <MDBCol lg="6" style={{width:'700px'}}>
+                        <MDBCol lg="6" style={{ width: '800px' }}>
                             <MDBCard className="mb-3" style={{ borderRadius: '.5rem' }}>
                                 <MDBRow className="g-0">
                                     <MDBCol md="4" className="gradient-custom text-center text-black"
@@ -28,37 +28,50 @@ const ViewProfile = () => {
                                     </MDBCol>
                                     <MDBCol md="8">
                                         <MDBCardBody className="p-4">
-                                            <MDBTypography tag="h6">Information</MDBTypography>
-                                            <hr className="mt-0 mb-4" />
-                                            <MDBRow className="pt-1">
+                                            <MDBTypography tag="h6">Account information</MDBTypography>
+                                            <hr className="mt-0 mb-3" />
+                                            <MDBRow>
+                                                <MDBCol size="6" className="mb-3">
+                                                    <MDBTypography tag="h6">Username</MDBTypography>
+                                                    <MDBCardText className="text-muted">{authDetails.username}</MDBCardText>
+                                                </MDBCol>
                                                 <MDBCol size="6" className="mb-3">
                                                     <MDBTypography tag="h6">Email</MDBTypography>
                                                     <MDBCardText className="text-muted">{authDetails.email}</MDBCardText>
                                                 </MDBCol>
-                                                <MDBCol size="6" className="mb-3">
-                                                    <MDBTypography tag="h6">Phone</MDBTypography>
-                                                    <MDBCardText className="text-muted">123 456 789</MDBCardText>
+                                            </MDBRow>
+
+                                            <MDBTypography className='mt-2' tag="h6">Shipping information</MDBTypography>
+                                            <hr className="mt-0 mb-3" />
+                                            <MDBRow>
+                                                <MDBCol size="4" className="mb-3">
+                                                    <MDBTypography tag="h6">Address</MDBTypography>
+                                                    <MDBCardText className="text-muted">{profile.address}</MDBCardText>
+                                                </MDBCol>
+                                                <MDBCol size="4" className="mb-3">
+                                                    <MDBTypography tag="h6">City</MDBTypography>
+                                                    <MDBCardText className="text-muted">{profile.city}</MDBCardText>
+                                                </MDBCol>
+                                                <MDBCol size="4" className="mb-3">
+                                                    <MDBTypography tag="h6">Zip</MDBTypography>
+                                                    <MDBCardText className="text-muted">{profile.zip_code}</MDBCardText>
                                                 </MDBCol>
                                             </MDBRow>
 
-                                            <MDBTypography tag="h6">Information</MDBTypography>
-                                            <hr className="mt-0 mb-4" />
-                                            <MDBRow className="pt-1">
-                                                <MDBCol size="6" className="mb-3">
-                                                    <MDBTypography tag="h6">Email</MDBTypography>
-                                                    <MDBCardText className="text-muted">info@example.com</MDBCardText>
+                                            <MDBRow className='mt-3'>
+                                                <MDBCol size="4" className="mb-3">
+                                                    <MDBTypography tag="h6">Billing address</MDBTypography>
+                                                    <MDBCardText className="text-muted">{profile.billing_address}</MDBCardText>
                                                 </MDBCol>
-                                                <MDBCol size="6" className="mb-3">
-                                                    <MDBTypography tag="h6">Phone</MDBTypography>
-                                                    <MDBCardText className="text-muted">123 456 789</MDBCardText>
+                                                <MDBCol size="4" className="mb-3">
+                                                    <MDBTypography tag="h6">Billing city</MDBTypography>
+                                                    <MDBCardText className="text-muted">{profile.billing_city}</MDBCardText>
+                                                </MDBCol>
+                                                <MDBCol size="4" className="mb-3">
+                                                    <MDBTypography tag="h6">Billing zip</MDBTypography>
+                                                    <MDBCardText className="text-muted">{profile.billing_zip_code}</MDBCardText>
                                                 </MDBCol>
                                             </MDBRow>
-
-                                            <div className="d-flex justify-content-start">
-                                                <a href="#!"><MDBIcon fab icon="facebook me-3" size="lg" /></a>
-                                                <a href="#!"><MDBIcon fab icon="twitter me-3" size="lg" /></a>
-                                                <a href="#!"><MDBIcon fab icon="instagram me-3" size="lg" /></a>
-                                            </div>
                                         </MDBCardBody>
                                     </MDBCol>
                                 </MDBRow>
@@ -66,7 +79,7 @@ const ViewProfile = () => {
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
-            </section> :
+                :
                 <div><br></br>
                     <Card className="text-center">
                         <Card.Body>

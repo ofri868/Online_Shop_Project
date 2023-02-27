@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { Button, Card } from 'react-bootstrap';
 import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
+import { selectAuthDetails } from '../slicers/authSlice';
 
 export function Shop() {
   const products = useAppSelector(selectProducts);
@@ -15,6 +16,7 @@ export function Shop() {
   const brands = useAppSelector(selectBrands);
   const scales = useAppSelector(selectScales);
   const cart = useAppSelector(selectCart);
+  const authDetails = useAppSelector(selectAuthDetails);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1)
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
@@ -151,7 +153,7 @@ export function Shop() {
               <span>Categories</span>
             </Card.Header>
             <Card.Body>
-              <div>Sort by:</div>
+              <div className='mb-2'>Sort by:</div>
               <div className='d-flex mb-2'>
                 <span className='me-1'>Brand:</span>
                 <select style={{width:'125px'}} id='brandFilter' onChange={(e) => setBrand(e.target.value)}>
@@ -159,6 +161,7 @@ export function Shop() {
                   {brands.map((brand, ind) =>
                     <option key={ind} value={brand.id}>{brand.desc}</option>)}
                 </select>
+                {authDetails.isAdmin && <div className='ms-1'><Button className='px-0 pt-0' style={{width: '25px', height: '25px', paddingBottom:'1px'}} variant='success'>+</Button></div>}
               </div>
               <div className='d-flex'>
                 <span className='me-2'>Scale:</span>

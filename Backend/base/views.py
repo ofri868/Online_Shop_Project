@@ -71,15 +71,21 @@ def user_orders(request):
     for order in orders.data:
         orders_details = OrderDetailSerializer(OrderDetail.objects.filter(order__id=order['id']), many=True).data
         for item in orders_details:
-            order['id'] = item['id']
+            temp = {'id':item['id'],
+                    'address':order['address'],
+                    'city':order['city'],
+                    'zip_code':order['zip_code'],
+                    'billing_address':order['billing_address'],
+                    'billing_city':order['billing_city'],
+                    'billing_zip_code':order['billing_zip_code'],
+                    'product':ProductSerializer(Product.objects.get(id=item['product'])).data,
+                    'reviewed':item['reviewed']}
             order['product'] = ProductSerializer(Product.objects.get(id=item['product'])).data
-            order['reviewed'] = item['reviewed']
-            order['createdTime'] = order['createdTime'].split('T',1)[0]
-            temp = order['createdTime'].split('-',2)
-            temp.reverse()
-            order['createdTime'] = '-'.join(temp)
-            res.append(order)
-
+            temp['createdTime'] = order['createdTime'].split('T',1)[0]
+            new_time = order['createdTime'].split('-',2)
+            new_time.reverse()
+            temp['createdTime'] = '-'.join(new_time)
+            res.append(temp)
     return Response(res)
 
 #########################################################################
@@ -105,14 +111,13 @@ class OrderView(APIView):
         if(request.user.id):
             cart_validation = False
             for item in request.data['orderDetails']:
-                item['order']=Order.objects.values_list('id', flat=True).filter(user=request.user.id).last()
+                # item['order']=Order.objects.values_list('id', flat=True).filter(user=request.user.id).last()
                 valid_test = OrderDetailSerializer(data=item, context={'user': request.user})
                 if valid_test.is_valid():
                     cart_validation = True
                 else:
                     cart_validation = False
             if(cart_validation):
-                print(request.data)
                 order = request.data['order']
                 new_order = Order(
                     user_id=request.user.id,
@@ -128,7 +133,7 @@ class OrderView(APIView):
                     serializer = OrderDetailSerializer(data=item, context={'user': request.user})
                     if serializer.is_valid():
                         serializer.save()
-                return Response("success")
+                return Response("Order recieved successfully!")
         return Response('failed')
 
 #########################################################################

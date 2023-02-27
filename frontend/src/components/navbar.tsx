@@ -76,7 +76,7 @@ function MyNavbar() {
                     <div className="d-flex justify-content-center align-items-center" style={{ marginBottom: '0.5rem' }}>{profile.first_name} {profile.last_name}</div>
                     <div className="d-flex justify-content-center align-items-center">Your profile</div>
                   </NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to="/shop">
+                  <NavDropdown.Item as={Link} to="/">
                     <div className="d-flex justify-content-center align-items-center" style={{ margin: 'auto' }}>
                       <Button variant='danger' onClick={() => handleLogout()}>Logout</Button>
                     </div>

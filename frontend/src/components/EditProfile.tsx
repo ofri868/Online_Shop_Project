@@ -63,7 +63,7 @@ const EditProfile = () => {
         }
 
 
-        axios.put(MYSERVER + 'profile', formData, { headers: { Authorization: `Bearer ${myToken}`, "content-type": "multipart/form-data", }, })
+        axios.put(MYSERVER + '/profile', formData, { headers: { Authorization: `Bearer ${myToken}`, "content-type": "multipart/form-data", }, })
             .then((res) => {
                 dispatch(changeProfile(res.data['profile']))
                 dispatch(setMessage(res.data['message']))

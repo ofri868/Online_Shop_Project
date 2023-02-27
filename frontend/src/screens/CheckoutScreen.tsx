@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Form, Row, Tab, Tabs } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { MYSERVER, PAYPAL_CLIENT_ID } from '../env';
 import { CartItem } from '../models/CartItem';
@@ -19,6 +19,7 @@ const CheckoutScreen = () => {
     const profile = useAppSelector(selectProfile)
     const order = useAppSelector(selectOrder)
     const dispatch = useAppDispatch();
+    const navigate = useNavigate()
     const [key, setKey] = useState('review')
     const [billing, setBilling] = useState(false)
     const [savedAddress, setSavedAddress] = useState(false)
@@ -107,6 +108,7 @@ const CheckoutScreen = () => {
             orderDetails.push({ "product": cart[i].product.id, "amount": cart[i].amount })
         }
         dispatch(checkoutAsync({ orderDetails, order, myToken }))
+        navigate('/')
     }
     return (
         <div>

@@ -15,7 +15,7 @@ const LoginScreen = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {
         if (logged) {
-            navigate('/shop')
+            navigate('/')
             dispatch(getProfileAsync(myToken))
         }
     }, [logged, navigate, dispatch])

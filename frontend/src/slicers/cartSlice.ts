@@ -7,12 +7,14 @@ export interface CartState {
   cart: CartItem[]
   sum: number
   shown: boolean
+  message:string
 }
 
 const initialState: CartState = {
   cart: [],
   sum: 0,
-  shown: false
+  shown: false,
+  message:''
 };
 
 export const checkoutAsync = createAsyncThunk(
@@ -96,6 +98,8 @@ export const shopSlice = createSlice({
     builder
       .addCase(checkoutAsync.fulfilled, (state, action) => {
         state.cart = []
+        localStorage.setItem("cart", JSON.stringify([]))
+        state.message = action.payload
       })
   },
 });
@@ -104,4 +108,5 @@ export const {hideCart, showCart, addToCart, calcTotal, decreaseAmount, increase
 export const selectCart = (state: RootState) => state.cart.cart;
 export const selectSum = (state: RootState) => state.cart.sum;
 export const selectShown = (state: RootState) => state.cart.shown;
+export const selectCartMessage = (state: RootState) => state.cart.message;
 export default shopSlice.reducer;

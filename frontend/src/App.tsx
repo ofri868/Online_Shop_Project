@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import Cart from './components/Cart';
 import MyNavbar from './components/navbar';
 import { getToken, loadAuthDetails, loadProfile, selectAuthMessage, selectToken } from './slicers/authSlice';
-import { loadCart } from './slicers/cartSlice';
+import { loadCart, selectCartMessage } from './slicers/cartSlice';
 import { getInitDataAsync, selectShopMessage } from './slicers/shopSlice';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './components/Footer';
@@ -16,6 +16,7 @@ const App = () => {
   const myToken = useAppSelector(selectToken)
   const shopMessage = useAppSelector(selectShopMessage)
   const authMessage = useAppSelector(selectAuthMessage)
+  const cartMessage = useAppSelector(selectCartMessage)
   const [message, setMessage] = useState('')
   useEffect(() => {
     dispatch(getToken())
@@ -34,6 +35,11 @@ const App = () => {
     if(shopMessage){
     setMessage(shopMessage)}
   }, [shopMessage])
+
+  useEffect(() => {
+    if(cartMessage){
+    setMessage(cartMessage)}
+  }, [cartMessage])
   
   useEffect(() => {
     if(authMessage){
@@ -46,6 +52,7 @@ const App = () => {
     }
     if(message){
       notify()
+      setMessage('')
     }
   }, [message])
   
