@@ -120,21 +120,27 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'db_test',
-#         'USER': 'root',
-#         'PASSWORD': 'ofri7716',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
+
 DATABASES = {
     'default': dj_database_url.config(
-        # Feel free to alter this value to suit your needs.
         default='postgres://db_store_vuvf_user:5vJxHyIfA9JQBpPFcRbpfSLt8vxrm42B@dpg-cfu9i0pa6gdotca7els0-a.frankfurt-postgres.render.com/db_store_vuvf',
     )
+}
+
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
 }
 
 # Password validation

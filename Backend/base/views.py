@@ -5,14 +5,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from myproj.decorators.logger import logger_decorator
 from .models import Order, OrderDetail, Product, Profile, Brand, Scale, Review
 from .serializers import BrandSerializer, OrderDetailSerializer, OrderSerializer, ProductSerializer, ProfileSerializer, ReviewSerializer, ScaleSerializer
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 #  /////////////// login start
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
+    @logger_decorator
     def get_token(cls, user):
         token = super().get_token(user)
         token['username'] = user.username
@@ -23,9 +27,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
-
+    @logger_decorator
     def post(self, request):
         try:
             refresh_token = request.data["refreshToken"]
@@ -35,6 +40,7 @@ class LogoutView(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@logger_decorator
 @api_view(['POST'])
 def register(request):
     user = User.objects.create_user(
@@ -50,6 +56,7 @@ def register(request):
 # /////////////////////// login end
 
 # Get initial data for the shop
+@logger_decorator
 @api_view(['GET'])
 def initial_data(request):
     products = Product.objects.all()
@@ -63,6 +70,7 @@ def initial_data(request):
     return Response({'products':products_serializer.data, 'brands':brands_serializer.data, 'scales':scales_serializer.data, 'newProducts':new_products_serializer.data})
 
 # Get user order history
+@logger_decorator
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_orders(request):
@@ -94,19 +102,20 @@ def user_orders(request):
 ###############################Order API#################################
 #########################################################################
 
+
 @permission_classes([IsAuthenticated])
 class OrderView(APIView):
     """
     This class handle the CRUD operations for Order
     """
-
+    @logger_decorator
     def get(self, request):
         """Handle GET requests to return a list of Orders"""
         temp = Order.objects.all()
         my_model = temp.filter(user=request.user.id)
         serializer = OrderSerializer(my_model, many=True)
         return Response(serializer.data)
-
+    @logger_decorator
     def post(self, request):
         """Handle POST requests to create a new Order"""
 
@@ -142,9 +151,10 @@ class OrderView(APIView):
 ############################Product API##################################
 #########################################################################
 
+
 class ProductView(APIView):
     """This class handle the CRUD operations for Product"""
-
+    @logger_decorator
     def get(self, request, msg=''):
         """Handle GET requests to return a list of Product objects"""
         if msg == 'new':
@@ -154,7 +164,7 @@ class ProductView(APIView):
             my_model = Product.objects.all()
             serializer = ProductSerializer(my_model, many=True)
         return Response(serializer.data)
-
+    @logger_decorator
     def post(self, request):
         """Handle POST requests to create a new Product"""
 
@@ -163,7 +173,7 @@ class ProductView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    @logger_decorator
     def put(self, request, pk):
         """Handle PUT requests to update an existing Product"""
         my_model = Product.objects.get(pk=pk)
@@ -172,7 +182,7 @@ class ProductView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    @logger_decorator
     def delete(self, request, pk):
         """Handle DELETE requests to delete a Product"""
         my_model = Product.objects.get(pk=pk)
@@ -183,17 +193,18 @@ class ProductView(APIView):
 ############################Profile API##################################
 #########################################################################
 
+
 @permission_classes([IsAuthenticated])
 class ProfileView(APIView):
     """This class handle the CRUD operations for Profile"""
-
+    @logger_decorator
     def get(self, request):
         """Handle GET requests to return a list of Profiles"""
         temp = Profile.objects.all()
         my_model = temp.filter(user=request.user.id)
         serializer = ProfileSerializer(my_model, many=True)
         return Response(serializer.data)
-
+    @logger_decorator
     def put(self, request):
         """Handle PUT requests to update an existing Profile"""
         print(request.user.id)
@@ -209,9 +220,10 @@ class ProfileView(APIView):
 ##############################Brand API##################################
 #########################################################################
 
+
 class BrandView(APIView):
     """This class handle the CRUD operations for Category"""
-
+    @logger_decorator
     def get(self, request):
         """Handle GET requests to return a list of Categories"""
         my_model = Brand.objects.all()
@@ -222,9 +234,10 @@ class BrandView(APIView):
 ##############################Scale API##################################
 #########################################################################
 
+
 class ScaleView(APIView):
     """This class handle the CRUD operations for Category"""
-
+    @logger_decorator
     def get(self, request):
         """Handle GET requests to return a list of Categories"""
         my_model = Scale.objects.all()
@@ -235,15 +248,16 @@ class ScaleView(APIView):
 ############################Profile API##################################
 #########################################################################
 
+
 class ReviewView(APIView):
     """This class handle the CRUD operations for Review"""
-
+    @logger_decorator
     def get(self, request, id):
         """Handle GET requests to return a list of Reviews"""
         my_model = Review.objects.all().filter(product = id)
         serializer = ReviewSerializer(my_model, many=True)
         return Response(serializer.data)
-
+    @logger_decorator
     def post(self, request):
         permission_classes([IsAuthenticated])
         """Handle POST requests to update an existing Review"""

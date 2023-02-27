@@ -13,6 +13,7 @@ site is live at https://dreamy-pony-b11c89.netlify.app/
 * Profile image updating that automatically updates images based on user feedback and preference.
 * Seamless login and logout experience,  including the ability to create an account and add products to a cart.
 * Secure and straightforward checkout process that allows users to complete transactions with ease Through PayPal.
+* Custom logger and decorators that monitor the activity of the site and ensure it is running smoothly.
 * Built using Docker containerization technology, making it easy to deploy and run the application in various environments.
 * Fake ecommerce store that is designed for coursework at John Bryce.
 Provides an excellent user experience that is both intuitive and secure.
