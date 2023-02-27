@@ -82,9 +82,11 @@ def user_orders(request):
                     'reviewed':item['reviewed']}
             order['product'] = ProductSerializer(Product.objects.get(id=item['product'])).data
             temp['createdTime'] = order['createdTime'].split('T',1)[0]
-            new_time = order['createdTime'].split('-',2)
+            print(temp['createdTime'])
+            new_time = temp['createdTime'].split('-',2)
             new_time.reverse()
             temp['createdTime'] = '-'.join(new_time)
+            
             res.append(temp)
     return Response(res)
 
