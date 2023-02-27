@@ -15,6 +15,7 @@ export interface ShopState {
   selectedProduct: Product
   reviews: Review[]
   reviewAllowed: Boolean
+  reviewedOrder:number
   orderAddress:Order
   message: string
   newProducts:Product[]
@@ -30,7 +31,8 @@ const initialState: ShopState = {
   orderAddress: { address: '', city: '', zip_code: '', billing_address: '', billing_city: '', billing_zip_code: '' },
   searchedProducts: [],
   newProducts: [],
-  reviewAllowed: false
+  reviewAllowed: false,
+  reviewedOrder: -1
 };
 
 export const getInitDataAsync = createAsyncThunk(
@@ -99,8 +101,8 @@ export const getReviewsAsync = createAsyncThunk(
 
 export const addReviewAsync = createAsyncThunk(
   'product/addReview',
-  async (data: { newReview: Review, myToken: string }) => {
-    const response = await addReview(data.newReview, data.myToken);
+  async (data: { newReview: Review, reviewedOrder:number, myToken: string }) => {
+    const response = await addReview(data.newReview, data.reviewedOrder, data.myToken);
     return response.data;
   }
 );
@@ -127,7 +129,11 @@ export const shopSlice = createSlice({
     },
     disallowReview: (state) => {
       state.reviewAllowed = false
+    },
+    setReviewedOrder: (state, action) => {
+      state.reviewedOrder = action.payload
     }
+
   },
   extraReducers: (builder) => {
     builder
@@ -164,7 +170,7 @@ export const shopSlice = createSlice({
   },
 });
 
-export const { loadSelectedProduct, changeSelectedProduct, searchProducts, setOrderAddress, allowReview, disallowReview } = shopSlice.actions;
+export const { loadSelectedProduct, changeSelectedProduct, searchProducts, setOrderAddress, allowReview, disallowReview, setReviewedOrder } = shopSlice.actions;
 export const selectProducts = (state: RootState) => state.shop.products;
 export const selectSearchedProducts = (state: RootState) => state.shop.searchedProducts;
 export const selectSingleProduct = (state: RootState) => state.shop.selectedProduct;
@@ -173,6 +179,7 @@ export const selectBrands = (state: RootState) => state.shop.brands;
 export const selectScales = (state: RootState) => state.shop.scales;
 export const selectReviews = (state: RootState) => state.shop.reviews;
 export const selectAllowReview = (state: RootState) => state.shop.reviewAllowed;
-export const selectMessage = (state: RootState) => state.shop.message;
+export const selectReviewedOrder = (state: RootState) => state.shop.reviewedOrder;
+export const selectShopMessage = (state: RootState) => state.shop.message;
 export const selectOrder = (state: RootState) => state.shop.orderAddress;
 export default shopSlice.reducer;

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { MYSERVER } from '../env'
 import { Product } from '../models/Product'
 import { getUserOrdersAsync, selectToken, selectUserOrders } from '../slicers/authSlice'
-import { allowReview, changeSelectedProduct } from '../slicers/shopSlice'
+import { allowReview, changeSelectedProduct, setReviewedOrder } from '../slicers/shopSlice'
 
 const MyOrders = () => {
     const dispatch = useAppDispatch()
@@ -18,13 +18,15 @@ const MyOrders = () => {
         }
     }, [dispatch, myToken])
 
-    const handleReview=(product:Product)=>{
+    const handleReview=(product:Product, order:number)=>{
         dispatch(changeSelectedProduct(product))
+        dispatch(setReviewedOrder(order))
         dispatch(allowReview())
         navigate('/review')
     }
     return (
         <div>
+            <h4 className='ms-3' style={{textAlign:'left'}}>Your Orders</h4>
             <Card>
                 <Card.Body>
                 {orders.map((order, ind) =>
@@ -32,13 +34,13 @@ const MyOrders = () => {
                         <div className='d-flex justify-content-start'>
                             <div><img style={{width:'140px', height:'100px'}} src={MYSERVER + order.product.image} alt='placeholder.png'></img></div>
                             <div className='ms-2 me-auto'>
-                                <div>{order.product.title}</div>
-                                <div className='d-flex justify-content-start'>Order date: {order.createdTime}</div>
+                                <div style={{fontWeight:'bold'}} className='fs-5 mb-2'>{order.product.title}</div>
+                                <div className='d-flex justify-content-start '>Order date: {order.createdTime}</div>
                             </div>
-                            <div className='me-2'>${order.product.price}</div>
+                            <div className='me-2 pt-1'>${order.product.price}</div>
                             <div>
                                 <div><Link to={'/shop/product#pageTop'}><Button onClick={() => dispatch(changeSelectedProduct(order.product))} style={{width:'170px', borderRadius: 0 }}>Go to product page</Button></Link></div>
-                                <div  className='mt-2'><Button style={{width:'170px', borderRadius: 0 }} onClick={() => handleReview(order.product)} variant='outline-primary'>Write a review</Button></div>
+                                {order.reviewed?<div  className='mt-2'><Button style={{width:'170px', borderRadius: 0 }} variant='outline-primary' disabled>Reviewed</Button></div> :<div  className='mt-2'><Button style={{width:'170px', borderRadius: 0 }} onClick={() => handleReview(order.product , order.id)} variant='outline-primary'>Write a review</Button></div> }
                             </div>
                         </div>
                         {ind !== orders.length -1 && <hr />}

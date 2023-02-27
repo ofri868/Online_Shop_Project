@@ -51,8 +51,8 @@ export function getReviews(product:number) {
   );
 }
 
-export function addReview(newReview:Review, myToken:string) {
+export function addReview(newReview:Review, reviewedOrder:number, myToken:string) {
   return new Promise<{ data: any }>((resolve) =>
-    axios.post(MYSERVER + 'review', newReview, {headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
+    axios.post(MYSERVER + 'review', {newReview, reviewedOrder}, {headers: {Authorization: `Bearer ${myToken}`}}).then((res) => resolve({ data: res.data }))
   );
 }

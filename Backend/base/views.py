@@ -1,3 +1,4 @@
+from turtle import up
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -71,7 +72,9 @@ def user_orders(request):
     for order in orders.data:
         orders_details = OrderDetailSerializer(OrderDetail.objects.filter(order__id=order['id']), many=True).data
         for item in orders_details:
+            order['id'] = item['id']
             order['product'] = ProductSerializer(Product.objects.get(id=item['product'])).data
+            order['reviewed'] = item['reviewed']
             order['createdTime'] = order['createdTime'].split('T',1)[0]
             temp = order['createdTime'].split('-',2)
             temp.reverse()
@@ -193,7 +196,7 @@ class ProfileView(APIView):
         if serializer.is_valid():
             # Profile.objects.get(user=request.user.id).image.delete(save=True)
             serializer.save()
-            return Response(serializer.data)
+            return Response({'profile':serializer.data, 'message':'Profile updated successfully'})
         return Response(serializer.errors)
 
 #########################################################################
@@ -238,9 +241,11 @@ class ReviewView(APIView):
     def post(self, request):
         permission_classes([IsAuthenticated])
         """Handle POST requests to update an existing Review"""
-        print(request.data)
-        serializer = ReviewSerializer(data=request.data)
+        serializer = ReviewSerializer(data=request.data['newReview'])
         if serializer.is_valid():
+            reviewed_order = OrderDetail.objects.get(id=request.data['reviewedOrder'])
+            reviewed_order.reviewed = True
+            reviewed_order.save(update_fields=['reviewed'])
             serializer.save()
             return Response('Review added successfully')
         return Response(serializer.errors)

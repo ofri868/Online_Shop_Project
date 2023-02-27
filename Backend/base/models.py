@@ -46,6 +46,7 @@ class OrderDetail(models.Model):
     order = models.ForeignKey(Order,on_delete=models.SET_NULL,null=True)
     product = models.ForeignKey(Product,on_delete=models.SET_NULL,null=True)
     amount =  models.IntegerField(null=True)
+    reviewed = models.BooleanField(null=True, default=False)
 
 class Review(models.Model):
     user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { changeProfile, selectProfile, selectToken } from '../slicers/authSlice'
+import { changeProfile, selectProfile, selectToken, setMessage } from '../slicers/authSlice'
 import { Button, Card, Col, Form, Row, Image } from 'react-bootstrap';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { MYSERVER } from '../env';
@@ -64,7 +64,11 @@ const EditProfile = () => {
 
 
         axios.put(MYSERVER + 'profile', formData, { headers: { Authorization: `Bearer ${myToken}`, "content-type": "multipart/form-data", }, })
-            .then((res) => dispatch(changeProfile(res.data))).then(() => navigate('/profile/view'))
+            .then((res) => {
+                dispatch(changeProfile(res.data['profile']))
+                dispatch(setMessage(res.data['message']))
+            })
+            .then(() =>navigate('/profile/view'))
     }
 
     return (

@@ -34,7 +34,7 @@ function MyNavbar() {
     event.preventDefault();
     let searchedProducts: Product[] = []
     products.forEach(
-      (prod) => {
+      (prod:Product) => {
         if (prod.desc.toLowerCase().includes(search.toLowerCase())) {
           searchedProducts.push(prod)
         }

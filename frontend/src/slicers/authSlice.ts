@@ -13,6 +13,7 @@ export interface AuthenticationState {
   userProfile: Profile
   userAuthDetails: AuthDetails
   userOrders: OrderDetail[]
+  message:string
 }
 
 const initialState: AuthenticationState = {
@@ -21,7 +22,8 @@ const initialState: AuthenticationState = {
   userProfile: { created: false, first_name: '', last_name: '', address: '', city: '', zip_code: '', billing_address: '', billing_city: '', billing_zip_code: '', image: '' },
   refreshToken: '',
   userAuthDetails: {},
-  userOrders: []
+  userOrders: [],
+  message: ''
 };
 
 export const logInAsync = createAsyncThunk(
@@ -51,13 +53,6 @@ export const getAuthDataAsync = createAsyncThunk(
   'auth/getAuthData',
   async (myToken: string) => {
     const response = await getAuthData(myToken);
-    return response.data;
-  }
-);
-export const updProfileAsync = createAsyncThunk(
-  'auth/updProfile',
-  async (data: {profile:any, token:string}) => {
-    const response = await updProfile(data.profile, data.token);
     return response.data;
   }
 );
@@ -99,8 +94,11 @@ export const authSlice = createSlice({
     },
     changeProfile: (state, action)=>{   
       state.userProfile = action.payload
+      sessionStorage.setItem("profile", JSON.stringify(action.payload))
+    },
+    setMessage:(state, action)=>{
+      state.message = action.payload
     }
-
   },
   extraReducers: (builder) => {
     builder
@@ -131,20 +129,19 @@ export const authSlice = createSlice({
         state.userProfile = action.payload[0]
         sessionStorage.setItem("profile", JSON.stringify(action.payload[0]))
       })
-      .addCase(updProfileAsync.fulfilled, (state, action) => {
-        state.userProfile = action.payload 
-      })
       .addCase(getUserOrdersAsync.fulfilled, (state, action)=>{
         state.userOrders = action.payload
+        console.log(action.payload)
       })
   },
 });
 
-export const { getToken, changeProfile, loadProfile, loadAuthDetails } = authSlice.actions;
+export const { getToken, changeProfile, loadProfile, loadAuthDetails, setMessage } = authSlice.actions;
 export const selectToken = (state: RootState) => state.auth.myToken;
 export const selectUserOrders = (state: RootState) => state.auth.userOrders;
 export const selectRefreshToken = (state: RootState) => state.auth.refreshToken;
 export const selectLogged = (state: RootState) => state.auth.logged;
 export const selectProfile = (state: RootState) => state.auth.userProfile;
 export const selectAuthDetails = (state: RootState) => state.auth.userAuthDetails;
+export const selectAuthMessage = (state: RootState) => state.auth.message;
 export default authSlice.reducer;

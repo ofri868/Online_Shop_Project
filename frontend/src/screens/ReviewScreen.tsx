@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { Review } from '../models/Review'
 import { selectAuthDetails, selectProfile, selectToken } from '../slicers/authSlice'
-import { addReviewAsync, disallowReview, loadSelectedProduct, selectAllowReview, selectSingleProduct } from '../slicers/shopSlice'
+import { addReviewAsync, disallowReview, loadSelectedProduct, selectAllowReview, selectReviewedOrder, selectSingleProduct } from '../slicers/shopSlice'
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { MYSERVER } from '../env'
@@ -17,6 +17,7 @@ const ReviewScreen = () => {
     const profile = useAppSelector(selectProfile)
     const myToken = useAppSelector(selectToken)
     const reviewAllowed = useAppSelector(selectAllowReview)
+    const reviewedOrder = useAppSelector(selectReviewedOrder)
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
     const [rating, setRating] = useState(-1)
@@ -40,7 +41,7 @@ const ReviewScreen = () => {
         newReview.user = profile.user
         newReview.username = authDetails.username
         dispatch(disallowReview())
-        dispatch(addReviewAsync({ newReview, myToken }))
+        dispatch(addReviewAsync({ newReview, reviewedOrder, myToken }))
         navigate('/profile/view')
     }
 
