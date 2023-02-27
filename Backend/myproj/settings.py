@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -117,15 +117,21 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'db_test',
+#         'USER': 'root',
+#         'PASSWORD': 'ofri7716',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_test',
-        'USER': 'root',
-        'PASSWORD': 'ofri7716',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
+    'default': dj_database_url.config(
+        # Feel free to alter this value to suit your needs.
+        default='postgres://db_store_vuvf_user:5vJxHyIfA9JQBpPFcRbpfSLt8vxrm42B@dpg-cfu9i0pa6gdotca7els0-a.frankfurt-postgres.render.com/db_store_vuvf',
+    )
 }
 
 # Password validation
